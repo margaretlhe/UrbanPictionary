@@ -1,0 +1,15 @@
+#!/usr/bin/env node
+
+const app = require('../server');
+const db = require('../models');
+
+// Set app port
+app.set('port', process.env.PORT || 80);
+
+// Sync the models with our db
+db.sequelize.sync().then(function(){
+    // Set our app to listen on our port
+    var server = app.listen(app.get('port'), function(){
+        console.log(`Server listening on port ${server.address().port}`);
+    })
+})
