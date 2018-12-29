@@ -25,5 +25,22 @@ app.use(express.json());
 // Set up app routes
 require('./routes')(app);
 
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+    const err = new Error('Page Not Found');
+    err.status = 404;
+    next(err);
+});
+
+// error handler
+app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+
+    res.render('error', {
+      message: err.message,
+      error: err
+    })
+  });
+
 // Export our app
 module.exports = app;

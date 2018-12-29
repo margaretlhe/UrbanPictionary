@@ -20,19 +20,22 @@ $(document).ready(function(){
                     uid: response.user.uid,
                     sfw: sfw.val()
                 }).then((res)=>{
-                    window.location.replace(res.redirect);
-                })
-                .catch((error)=>{
-                    // TODO: Need to handle errors in a better way.
-                    console.log("Error occurred while sending a post request to create a new game");
-                    console.log(error);
-                })
+                    if (res.redirect){
+                        // Redirect only if request returns a url.
+                        window.location.replace(res.redirect);
+                    }
+                }).catch((error)=>{
+                    LogError(error, "Error occurred while sending a post request to create a new game");
+                });
             });
         }
     });
 
     joinGameForm.on('submit', (e)=>{
         e.preventDefault();
+
+        // TODO: Need BETTER validation here.
+
         if (displayName.val()){
             auth.signInAnonymously((response) => {
 
@@ -47,13 +50,12 @@ $(document).ready(function(){
                 });
 
                 $.post("/game/join", data).then((res)=>{
-                    window.length.replace(res.redirect);
-                })
-                .catch((error)=>{
-                    // TODO: Need to handle errors in a better way.
-                    console.log("Error occurred while sending a post request to join a new game");
-                    console.log(error);
-                })
+                    if (res.redirect){
+                        window.location.replace(res.redirect);
+                    }
+                }).catch((error)=>{
+                    LogError(error, "Error occurred while sending a post request to join a new game");
+                });
             });
         }
     });
@@ -62,9 +64,13 @@ $(document).ready(function(){
         firebase.auth().currentUser.updateProfile({
             displayName: name
         }).catch((error)=>{
-            // TODO: Need to handle errors in a better way.
-            console.log("Error Occurred while updating the user's display name");
-            console.log(error);
+            LogError(error, "Error Occurred while updating the user's display name");
         })
+    }
+
+    function LogError(error, consoleMsg){
+        // TODO: Need to handle errors in a better way.
+        console.log(consoleMsg);
+        console.log(error);
     }
 })

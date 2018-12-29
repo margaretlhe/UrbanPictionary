@@ -1,23 +1,15 @@
-const keys = require('../config/keys');
-const firebase = require('../config/firebase');
-const gamesRoot = "games";
-
-// Sign in admin user.
-firebase.auth().signInWithEmailAndPassword(
-    keys.firebase_admin.email,
-    keys.firebase_admin.password
-).catch((error)=>{
-    // TODO: Need better error handling.
-    console.log("COULD NOT LOG IN ADMIN");
-    console.log(error);
-});
+const Firebase = require('../config/firebase');
+const firebase = Firebase.admin;
+const Game = Firebase.Game;
+const Player = Firebase.Player;
+const nodes = Firebase.nodes;
+const maxPlayersPerGame = 5;
 
 exports.mode = function(req, res){
     res.render('game/mode');
 }
 
 exports.join_view = function(req, res){
-
     // SFW set to true by default.
     var sfw = true;
     if (req.params.nsfw){
@@ -31,59 +23,82 @@ exports.join_view = function(req, res){
 
 exports.create_game = function(req, res){
     // Create a game with default info.
-    firebase.database().ref(gamesRoot).push({
-        active: true,
-        sfw: req.body.sfw === 'true',
-        roundCount: 0,
-        usedWordIds: [0],
-        players: {
-            [req.body.uid]: {
-                judge: true,
-                score: 0
-            }
-        },
-        round: {
-            timeLeft: "2:00",
-            started: false,
-            word: "__"
-        }
-    }).then((snap)=>{
-        res.json({ redirect: `lobby/${snap.key}` });
-    }).catch((error)=>{
-        console.log("ERROR while creating a game");
-        console.log(error);
-        res.json({ redirect: "/error" });
+    firebase.database().ref(nodes.games)
+    .push(new Game(req.body.sfw === 'true', 
+            new Player(req.body.uid, true))
+    ).then((snap)=>{
+        res.json(GetLobbyRedirectObj(snap.key));
+    }).catch((error)=>{        
+        RenderError(error, "ERROR while creating a game");
     });
 }
 
 exports.join_game = function(req, res){
-    // Post request to join a game.
-    console.log(req.body);
+    // Extract required info from request.
     var gamecode = req.body.gamecode;
     var uid = req.body.uid;
-    console.log(gamecode);
 
-    // TODO: Redirect user to the lobby with the game code.
-    res.json({ result: "Success!" });
+    // Attempt to join the player to the game.
+    firebase.database().ref(nodes.games).child(gamecode).once('value')
+    .then((snap)=>{
+        // First we need to ensure the game exists.
+        if (snap.val()){
+            // Then we need to ensure there's enough room for another player in the game
+            // and the player is not already in the game.
+            var playersInLobby = Object.keys(snap.child(nodes.players).val());
+            if (playersInLobby.length < maxPlayersPerGame && !playersInLobby.includes(uid)){
+                return true;
+            }
+        }
+    }).then((ableToJoin)=>{
+        if (ableToJoin){
+            // Add the player to the game.
+            firebase.database().ref(nodes.games).child(gamecode).child(nodes.players).child(uid)
+            .set(new Player(uid, false)[uid])
+            .then(()=>{
+                res.json(GetLobbyRedirectObj(gamecode));
+            }).catch((error)=>{
+                RenderError(error, "ERROR while setting player defaults");
+            });
+        } else {
+            res.json(GetLobbyRedirectObj(gamecode));
+        }
+    }).catch((error)=>{
+        RenderError(error, "ERROR while joining a game");
+    });
 }
 
 exports.lobby = function(req, res){
-
+    // Create a game object that can be sent our views.
     var gameObj = {
         gamecode: req.params.gamecode
     }
 
     // Ensure game exists before attempting to render lobby.
-    firebase.database().ref(gamesRoot).child(gameObj.gamecode).once('value').then((snap)=>{
+    firebase.database().ref(nodes.games).child(gameObj.gamecode).once('value')
+    .then((snap)=>{
         if (snap.val()){
-            // TODO: Need to check if the game full!
-            res.render('game/lobby', gameObj);
+            // Check if game is full.
+            if (Object.keys(snap.child(nodes.players).val()).length > maxPlayersPerGame){
+                res.render('errors/game-full', gameObj);
+            } else {
+                res.render('game/lobby', gameObj);
+            }
         } else {
             res.render('errors/game-not-found', gameObj);
         }
     }).catch((error)=>{
-        // TODO: Better error handling.
-        console.log("Error occurred while checking if game exits!");
-        console.log(error);
+        RenderError(error, "Error occurred while checking if game exits!");
     });
+}
+
+function GetLobbyRedirectObj(gamecode){
+    return { redirect: `/game/lobby/${gamecode}` };
+}
+
+function RenderError(err, consoleMsg){
+    // TODO: Better error handling.
+    console.log(consoleMsg);
+    console.log(error);
+    res.render('error', { error: error });
 }
