@@ -42,7 +42,7 @@ exports.join_game = function(req, res){
     firebase.database().ref(nodes.games).child(gamecode).once('value')
     .then((snap)=>{
         // First we need to ensure the game exists.
-        if (snap.val()){
+        if (snap.exists()){
             // Then we need to ensure there's enough room for another player in the game
             // and the player is not already in the game.
             var playersInLobby = Object.keys(snap.child(nodes.players).val());
@@ -77,7 +77,7 @@ exports.lobby = function(req, res){
     // Ensure game exists before attempting to render lobby.
     firebase.database().ref(nodes.games).child(gameObj.gamecode).once('value')
     .then((snap)=>{
-        if (snap.val()){
+        if (snap.exists()){
             // Check if game is full.
             if (Object.keys(snap.child(nodes.players).val()).length > maxPlayersPerGame){
                 res.render('errors/game-full', gameObj);
