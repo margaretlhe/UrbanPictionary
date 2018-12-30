@@ -17,6 +17,7 @@ exports.join_view = function(req, res){
     }
     
     res.render('game/join', {
+        layout: 'firebase',
         sfw: sfw
     });
 }
@@ -71,6 +72,7 @@ exports.join_game = function(req, res){
 exports.lobby = function(req, res){
     // Create a game object that can be sent our views.
     var gameObj = {
+        layout: 'firebase',
         gamecode: req.params.gamecode
     }
 
