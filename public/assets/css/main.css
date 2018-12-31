@@ -1,0 +1,201 @@
+body {
+    background-color: #89CEE9;
+}
+
+.titleContainer {
+    width: 100%;
+    text-align: center;
+}
+
+#title {
+    font-family: 'Amatic SC', cursive;
+    font-size: 100px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+/* Home Page */
+#enterContainer {
+    text-align: center;
+}
+
+#enterBtn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0 auto;
+    margin-top: 225px;
+    width: 350px;
+    height: 150px;
+    background-color: #1FE96E;
+    border-radius: 30px;
+    box-shadow: 2px 2px #000000;
+}
+
+#enterBtnLink {
+    font-family: 'Amatic SC', cursive;
+    font-size: 75px;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+/* End Home Page */
+
+/* Mode Page */
+.scene {
+    width: 350px;
+    height: 400px;
+    border: none;
+    margin: 40px 0;
+    perspective: 600px;
+}
+
+.cardContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transform-origin: center right;
+    transition: transform 1s;
+}
+
+.card.is-flipped {
+    transform: translateX(-100%) rotateY(-180deg);
+}
+
+.card__face {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    line-height: 260px;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    font-size: 40px;
+    backface-visibility: hidden;
+}
+
+.card__face--front {
+    background: #FFBD6F;
+}
+
+.card__face--front2 {
+    background: #000000;
+}
+
+.card__face--back {
+    display: flex;
+    flex-direction: row;
+    width: 500px;
+    margin: 0 auto;
+    background: #F3EB72;
+    transform: rotateY(180deg);
+}
+
+.modeWrapper {
+    margin-top: 100px;
+    border: 1px solid black;
+    border-radius: 50%;
+    padding-bottom: 50px;
+    width: 200px;
+    height: 200px;
+
+}
+
+.mode {
+    font-family: 'Amatic SC', cursive;
+    color: #000000;
+    font-size: 120px;
+    height: 200px;
+    width: 200px;
+    background-color: rgba(0, 0, 0, 0);
+    margin-bottom: 50px;
+    border: none;
+}
+
+.mode2 {
+    color: #ffffff;
+    background-color: #000000;
+}
+
+.hostAndJoinBtn {
+    width: 150px;
+    height: 150px;
+    font-size: 20px;
+    border-radius: 50%;
+}
+
+.hostAndJoinBtn>span {
+    font-family: 'Amatic SC', cursive;
+    font-size: 35px;
+    position: relative;
+    bottom: 50px;
+}
+
+/* End Mode Page */
+
+/* Join Page */
+
+.infoContainer {
+    height: 400px;
+    width: 650px;
+    margin: 0 auto;
+    margin-top: 80px;
+    font-family: 'Amatic SC', cursive;
+    background-color: #FFBD6F;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    text-align: center;
+    border-radius: 30px;
+
+}
+
+.infoContainer>h1 {
+    font-size: 120px;
+}
+
+#join-game {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    text-align: center;
+    width: 150px;
+    margin: 0 auto;
+}
+
+#join-game>input {
+    margin-top: 10px;
+}
+
+#display-name {
+    margin: 0 auto;
+    width: 150px;
+    height: 50px;
+}
+
+.placeHolderStyle {
+    text-align: center;
+    font-size: 30px;
+}
+
+#joinGameBtn {
+    font-family: 'Amatic SC', cursive;
+    background-color: #1FE96E;
+    border-radius: 10px;
+    height: 50px;
+    font-size: 30px;
+    margin-top: 10px;
+}

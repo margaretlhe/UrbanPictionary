@@ -1,6 +1,51 @@
-<form action="/game/join">
-    <input type="submit" value="SFW">
-</form>
-<form action="/game/join/1">
-    <input type="submit" value="NSFW">
-</form>
+<div class="container">
+    {{>title-html}}
+    <div class="cardContainer">
+        <div class="scene scene--card">
+            <div class="card">
+                <div class="card__face card__face--front">
+                    <div class="hostOrJoin">
+                        <button class="hostAndJoinBtn">
+                            <span>Host a game</span>
+                        </button>
+                        <button class="hostAndJoinBtn">
+                            <span>Join a game</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="card__face card__face--back">
+
+                    <!-- NEED TO LINK BUTTONS TO CORRECT LOGIC-->
+                  <div class="modeWrapper" style="margin-right: 15px;">
+                        <button class="mode" >
+                            SFW
+                        </button>
+                  </div>
+                         <div class="modeWrapper" style="margin-left: 15px;">
+                        <button class="mode" >
+                            NSFW
+                        </button>
+                  </div>
+                    
+                       
+                  
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <form action="/game/join/1">
+        <input type="submit" value="NSFW">
+    </form>
+    <form action="/game/join/">
+        <input type="submit" value="SFW">
+    </form>
+
+
+    <script>
+        var card = document.querySelector('.card');
+        card.addEventListener('click', function () {
+            card.classList.toggle('is-flipped');
+        });
+    </script>
