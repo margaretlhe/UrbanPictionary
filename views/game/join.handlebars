@@ -1,0 +1,20 @@
+{{#if sfw}}
+    <h1>SFW</h1>
+{{else}}
+    <h1>NSFW</h1>
+{{/if}}
+
+<input type="hidden" id="sfw" value="{{sfw}}">
+
+{{!-- All this needs client-side validation --}}
+<input type="text" id="display-name" placeholder="Display Name">
+
+<form id="join-game">
+    <input type="text" name="gamecode">
+    <button type="submit">Join Game</button>    
+</form>
+
+<button type="button" id="start-btn">Start New Game</button>
+
+{{> firebase-init }}
+<script src="/assets/js/join.js"></script>
