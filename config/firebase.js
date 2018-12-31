@@ -1,6 +1,7 @@
 // Require just the firebase services we need
 const keys = require('./keys');
 const admin = require('firebase-admin');
+const uuidv1 = require('uuid/v1');
 
 admin.initializeApp({
     credential: admin.credential.cert({
@@ -23,12 +24,16 @@ admin.initializeApp({
 
 exports.admin = admin;
 
-exports.nodes = {
+exports.nodes = { // TODO: This should be in one place where accessable by both client and server.
     games: "games",
-    players: "players"
+    players: "players",
+    round: "round",
+    started: "stared",
+    word: "word",
+    uuid: "uuid"
 };
 
-exports.Game = function(sfw, players){
+exports.Game = function(ownerUid, ownerObj, sfw){
     // Set default values.
     this.active = true,
     this.roundCount = 0,
@@ -40,14 +45,20 @@ exports.Game = function(sfw, players){
 
     // Set variable parameters
     this.sfw = sfw,
-    this.players = players
+    this.players =  {
+        [ownerUid]: ownerObj
+    }
 }
 
-exports.Player = function(id, judge){
-    return {
-        [id]: {
-            judge: judge,
-            score: 0
-        }
-    }
+exports.Player = function(displayName, owner, judge){
+    this.displayName = displayName,
+    this.owner = owner,
+    this.judge = judge,
+    this.score = 0,
+    // Important difference between the player's uid and a player's uuid.
+    // - uid: Player's auth uid as defined in firebase's authenticated users.
+    // - uuid: Generated unique id to represent the user for a given game.
+    //         This is generated to be able to identify the user in a game on the client side
+    //         without having to expose the user's auth uid.
+    this.uuid = uuidv1()
 };

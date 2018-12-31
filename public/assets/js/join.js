@@ -18,6 +18,7 @@ $(document).ready(function(){
                 // Create a new game with the User's ID and user is redirected to new game.
                 $.post("/game/create", {
                     uid: response.user.uid,
+                    displayName: displayName.val(),
                     sfw: sfw.val()
                 }).then((res)=>{
                     if (res.redirect){
@@ -25,7 +26,7 @@ $(document).ready(function(){
                         window.location.replace(res.redirect);
                     }
                 }).catch((error)=>{
-                    LogError(error, "Error occurred while sending a post request to create a new game");
+                    LogFirebaseError(error, "Error occurred while sending a post request to create a new game");
                 });
             });
         }
@@ -44,7 +45,8 @@ $(document).ready(function(){
 
                 // Serialize form input data for post request.
                 var data = {};
-                data["uid"] = response.user.uid;
+                data.uid = response.user.uid;
+                data.displayName = displayName.val();
                 $.each(joinGameForm.serializeArray(), (i, field) => {
                     data[field.name] = field.value;
                 });
@@ -54,7 +56,7 @@ $(document).ready(function(){
                         window.location.replace(res.redirect);
                     }
                 }).catch((error)=>{
-                    LogError(error, "Error occurred while sending a post request to join a new game");
+                    LogFirebaseError(error, "Error occurred while sending a post request to join a new game");
                 });
             });
         }
@@ -64,13 +66,7 @@ $(document).ready(function(){
         firebase.auth().currentUser.updateProfile({
             displayName: name
         }).catch((error)=>{
-            LogError(error, "Error Occurred while updating the user's display name");
+            LogFirebaseError(error, "Error Occurred while updating the user's display name");
         })
-    }
-
-    function LogError(error, consoleMsg){
-        // TODO: Need to handle errors in a better way.
-        console.log(consoleMsg);
-        console.log(error);
     }
 })

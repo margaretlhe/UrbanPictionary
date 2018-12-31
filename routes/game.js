@@ -12,8 +12,9 @@ router.post('/join', game_controller.join_game);
 
 router.post('/create', game_controller.create_game);
 
+// TODO: Determine whether we'll need to have lobby and start game all in the same namespace to persist chat.
 router.get('/lobby/:gamecode', game_controller.lobby);
 
-router.post('/start/:gamecode', game_controller.lobby);
+router.get('/start/:gamecode/:uuid', game_controller.start);
 
 module.exports = router;
