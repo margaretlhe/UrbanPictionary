@@ -1,7 +1,6 @@
 $(document).ready(function(){
 
-    // Get the game code from the url path.
-    const gamecode = window.location.pathname.split('/').pop();
+    var gamecode = extractGameCodeFromUrl();
     const gameSnap = firebase.database().ref(nodes.games).child(gamecode);
     const maxPlayers = 5; // TODO: This global limit should be placed in one place accessable by client and server.
     
@@ -31,17 +30,9 @@ $(document).ready(function(){
     }
 
     function setFirebaseSockets(){
-        // Store player count used to signal automatic start once room is full.
-        var playerCount = 0;
-
         // Monitor players added to the game.
         gameSnap.child(nodes.players).on('child_added', (childSnap)=>{
             addPlayerToLobby(childSnap.val());
-
-            playerCount++;
-            if (playerCount === maxPlayers){
-                // TODO: start the game if max players have been reached.
-            }
         });
 
         // Monitor players removed from the game.
@@ -55,9 +46,6 @@ $(document).ready(function(){
                 startGame();
             }
         });
-
-        // Chat monitor
-        // TODO: create listener for chat
     }
 
     function updateStaticUI(sfw, roundCount){
@@ -81,6 +69,7 @@ $(document).ready(function(){
     }
 
     function startGame(){
-        // TODO: start the game.
+        let queryParams = extractQueryParametersFromUrl();
+        window.location.replace(`/game/play/${gamecode}?${nodes.uuid}=${queryParams.uuid}`);
     }
 })

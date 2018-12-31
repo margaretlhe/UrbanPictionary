@@ -1,7 +1,7 @@
 <h1>This is the lobby for game: {{gamecode}}</h1>
 <br>
 {{#if owner}}
-    <button>START</button>
+    <button id="start-btn">START</button>
 {{/if}}
 <br>
 <h2>Mode: <span id="sfw"></span></h2>
@@ -13,3 +13,7 @@
 
 {{> firebase-init }}
 <script src="/assets/js/firebase_sockets.js"></script>
+
+{{#if owner}}
+    <script src="/assets/js/start.js"></script>
+{{/if}}

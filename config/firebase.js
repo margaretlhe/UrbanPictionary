@@ -24,13 +24,15 @@ admin.initializeApp({
 
 exports.admin = admin;
 
-exports.nodes = { // TODO: This should be in one place where accessable by both client and server.
+exports.nodes = { // TODO: This should be in one place where accessable by both client and server (not sure where yet).
     games: "games",
     players: "players",
     round: "round",
-    started: "stared",
+    started: "started",
     word: "word",
-    uuid: "uuid"
+    uuid: "uuid",
+    owner: "owner",
+    judge: "judge"
 };
 
 exports.Game = function(ownerUid, ownerObj, sfw){

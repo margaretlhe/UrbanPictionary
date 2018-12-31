@@ -9,13 +9,14 @@ const config = {
 };
 firebase.initializeApp(config);
 
-const nodes = { // TODO: This should be in one place where accessable by both client and server.
+const nodes = { // TODO: This should be in one place where accessable by both client and server (not sure where yet).
     games: "games",
     players: "players",
     round: "round",
     sfw: "sfw",
     roundCount: "roundCount",
-    started: "started"
+    started: "started",
+    uuid: "uuid"
 };
 
 const auth = {
@@ -29,6 +30,20 @@ const auth = {
     }
 
     // TODO: This can expand into other types of authentication.
+}
+
+function extractGameCodeFromUrl(){
+    // Get the game code from the url path.
+    return window.location.pathname.split('/').pop();
+}
+
+function extractQueryParametersFromUrl(){
+    // Extract query parameters from url.
+    var queryParams = {};
+    window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, (m,key,value)=>{
+        queryParams[key] = value;
+    });
+    return queryParams;
 }
 
 function LogFirebaseError(error, consoleMsg){
