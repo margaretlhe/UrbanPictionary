@@ -3,7 +3,7 @@ const firebase = Firebase.admin;
 const Game = Firebase.Game;
 const Player = Firebase.Player;
 const nodes = Firebase.nodes;
-const maxPlayersPerGame = 5; // TODO: This global limit should be placed in one place accessable by client and server.
+const maxPlayersPerGame = 5;
 
 exports.mode = function(req, res){
     res.render('game/mode');
@@ -63,20 +63,20 @@ exports.join_game = function(req, res){
     }).then((ableToJoin)=>{
         if (ableToJoin){
             // Add the player to the game by creating a new child node with the player's uid in the players node
-            // and setting the new child node to the player's object.
+            // and setting that child node to the newly created player's object.
             var newPlayer = new Player(displayName, false, false);
             firebase.database().ref(nodes.games).child(gamecode).child(nodes.players).child(reqObj.uid)
             .set(newPlayer)
             .then(()=>{
                 res.json(getLobbyRedirectObj(reqObj.gamecode, newPlayer.uuid));
             }).catch((error)=>{
-                logError(error, "ERROR while setting player defaults");
+                logError(error, "ERROR occurred while joining the player to the game.");
             });
         } else {
             res.json(getLobbyRedirectObj(reqObj.gamecode));
         }
     }).catch((error)=>{
-        logError(error, "ERROR while joining a game");
+        logError(error, "ERROR occurred while getting the game to join.");
     });
 }
 
@@ -87,17 +87,23 @@ exports.lobby = function(req, res){
         playerUuid: req.query.uuid
     }
 
-    // Ensure game exists before attempting to render lobby.
+    // Attempt to render lobby.
     firebase.database().ref(nodes.games).child(reqObj.gamecode).once('value')
     .then((snap)=>{
+        // First ensure the game exists.
         if (snap.exists()){
-            // Check if game is full.
-            if (Object.keys(snap.child(nodes.players).val()).length > maxPlayersPerGame){
+            // Get all players enrolled in game.
+            var allPlayers = snap.child(nodes.players).val();
+
+            // Check if game is full and player that submitted request is enrolled in game.
+            if (!getPlayerIfEnrolledInGame(allPlayers, reqObj.playerUuid)){
+                renderError(res, "Error: You are not enrolled in this game!");
+            } else if (Object.keys(allPlayers).length > maxPlayersPerGame){
                 res.render('errors/game-full', reqObj);
             } else {
                 // Use the firebase layout to render the lobby.
                 reqObj.layout = 'firebase';
-                reqObj.owner = isGameOwner(snap.child(nodes.players).val(), reqObj.playerUuid);
+                reqObj.owner = isGameOwner(allPlayers, reqObj.playerUuid);
                 res.render('game/lobby', reqObj);
             }
         } else {
@@ -109,7 +115,7 @@ exports.lobby = function(req, res){
 }
 
 exports.start = function(req, res){
-    // Extract required information from request.
+    // Extract required information from post request.
     var reqObj = {
         gamecode: req.params.gamecode,
         uuid: req.body.uuid
@@ -151,10 +157,12 @@ exports.play = function(req, res){
         if (snap.exists()){
             // Second ensure the game has started.
             if (snap.child(nodes.round).child(nodes.started).val()){
+                // Get all players enrolled in game.
+                var allPlayers = snap.child(nodes.players).val();
                 // Third make sure that the user is enrolled in the game.
-                if (extractPlayerUidFromUuid(snap.child(nodes.players).val(), reqObj.uuid)){
+                if (getPlayerIfEnrolledInGame(allPlayers, reqObj.uuid)){
                     // Fourth check if the player is a judge or a drawer.
-                    if (isRoundJudge(snap.child(nodes.players).val(), reqObj.uuid)){
+                    if (isRoundJudge(allPlayers, reqObj.uuid)){
                         res.render('game/judge');
                     } else {
                         res.render('game/drawer');
@@ -185,16 +193,16 @@ function isRoundJudge(players, uuid){
     return extractPlayerInfo(players, uuid, nodes.judge);
 }
 
-function extractPlayerUidFromUuid(players, uuid){
-    // Get player's user uid based on the player's assigned uuid for the given game.
-    return Object.keys(players).filter(player=>players[player].uuid === uuid).pop();
-}
-
 function extractPlayerInfo(players, uuid, property){
-    var playeruid = extractPlayerUidFromUuid(players, uuid);
+    var playeruid = getPlayerIfEnrolledInGame(players, uuid);
 
     // Check if player is owner of the game. Return false is player uid was not found or not provided.
     return playeruid === undefined ? false : players[playeruid][property];
+}
+
+function getPlayerIfEnrolledInGame(players, uuid){
+    // Get player's auth uid based on the player's assigned uuid for the given game.
+    return Object.keys(players).filter(player=>players[player].uuid === uuid).pop();
 }
 
 /* TODO: These error function should probably be modularized into their own file so then can be used by any controller. */

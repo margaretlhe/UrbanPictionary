@@ -2,7 +2,6 @@ $(document).ready(function(){
 
     var gamecode = extractGameCodeFromUrl();
     const gameSnap = firebase.database().ref(nodes.games).child(gamecode);
-    const maxPlayers = 5; // TODO: This global limit should be placed in one place accessable by client and server.
     
     firebase.auth().onAuthStateChanged((user)=>{
         if (user){
