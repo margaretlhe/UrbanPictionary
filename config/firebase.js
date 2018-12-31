@@ -35,6 +35,8 @@ exports.nodes = { // TODO: This should be in one place where accessable by both 
     judge: "judge"
 };
 
+exports.maxPlayersPerGame = 5;
+
 exports.Game = function(ownerUid, ownerObj, sfw){
     // Set default values.
     this.active = true,

@@ -1,9 +1,10 @@
+const utils = require('./utils');
 const Firebase = require('../config/firebase');
 const firebase = Firebase.admin;
 const Game = Firebase.Game;
 const Player = Firebase.Player;
 const nodes = Firebase.nodes;
-const maxPlayersPerGame = 5;
+const maxPlayersPerGame = Firebase.maxPlayersPerGame;
 
 exports.mode = function(req, res){
     res.render('game/mode');
@@ -36,7 +37,7 @@ exports.create = function(req, res){
     .then((snap)=>{
         res.json(getLobbyRedirectObj(snap.key, reqObj.gameOwner.uuid));
     }).catch((error)=>{        
-        logError(error, "ERROR while creating a game");
+        utils.logError(error, "ERROR while creating a game");
     });
 }
 
@@ -70,13 +71,13 @@ exports.join_game = function(req, res){
             .then(()=>{
                 res.json(getLobbyRedirectObj(reqObj.gamecode, newPlayer.uuid));
             }).catch((error)=>{
-                logError(error, "ERROR occurred while joining the player to the game.");
+                utils.logError(error, "ERROR occurred while joining the player to the game.");
             });
         } else {
             res.json(getLobbyRedirectObj(reqObj.gamecode));
         }
     }).catch((error)=>{
-        logError(error, "ERROR occurred while getting the game to join.");
+        utils.logError(error, "ERROR occurred while getting the game to join.");
     });
 }
 
@@ -97,7 +98,7 @@ exports.lobby = function(req, res){
 
             // Check if game is full and player that submitted request is enrolled in game.
             if (!getPlayerIfEnrolledInGame(allPlayers, reqObj.playerUuid)){
-                renderError(res, "Error: You are not enrolled in this game!");
+                utils.renderError(res, "Error: You are not enrolled in this game!");
             } else if (Object.keys(allPlayers).length > maxPlayersPerGame){
                 res.render('errors/game-full', reqObj);
             } else {
@@ -110,7 +111,7 @@ exports.lobby = function(req, res){
             res.render('errors/game-not-found', reqObj);
         }
     }).catch((error)=>{
-        renderError(res, error, "Error occurred while checking if game exits!");
+        utils.renderError(res, error, "Error occurred while checking if game exits!");
     });
 }
 
@@ -131,16 +132,16 @@ exports.start = function(req, res){
                 .set(true)
                 .then(()=> res.json({ result: "success" }))
                 .catch((error)=>{
-                    logError(error, "Error occurred while attempting to start the game");
+                    utils.logError(error, "Error occurred while attempting to start the game");
                 });
             } else {
-                logError("Error: You don't have the permission to start the game");
+                utils.logError("Error: You don't have the permission to start the game");
             }
         } else {
-            logError('Error: Game not found whie attempting to start the game');
+            utils.logError('Error: Game not found whie attempting to start the game');
         }
     }).catch((error)=>{
-        logError(error, "Error occurred while attempting to start the game");
+        utils.logError(error, "Error occurred while attempting to start the game");
     });
 }
 
@@ -168,16 +169,16 @@ exports.play = function(req, res){
                         res.render('game/drawer');
                     }
                 } else {
-                    renderError(res, "You are not enrolled in this game");
+                    utils.renderError(res, "You are not enrolled in this game");
                 }
             } else {
-                renderError(res, "Game has not started");
+                utils.renderError(res, "Game has not started");
             }
         } else {
             res.render('errors/game-not-found', gameObj);
         }
     }).catch((error)=>{
-        renderError(res, error, "Something went wrong while attempting to render the game");
+        utils.renderError(res, error, "Something went wrong while attempting to render the game");
     });
 }
 
@@ -204,18 +205,3 @@ function getPlayerIfEnrolledInGame(players, uuid){
     // Get player's auth uid based on the player's assigned uuid for the given game.
     return Object.keys(players).filter(player=>players[player].uuid === uuid).pop();
 }
-
-/* TODO: These error function should probably be modularized into their own file so then can be used by any controller. */
-function renderError(res, err, consoleMsg){
-    // NOTE: This method should only be called from GET requests. If it's called
-    //       from any other types of requests, it won't render anything.
-    logError(err, consoleMsg);
-    res.render('error', { error: err });
-}
-
-function logError(err, consoleMsg){
-    // TODO: Better error handling for backend.
-    console.log(consoleMsg);
-    console.log(err);
-}
-/* */
