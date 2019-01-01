@@ -1,4 +1,5 @@
 const utils = require('./utils');
+const roundManager = require('./round_manager');
 const Firebase = require('../config/firebase');
 const firebase = Firebase.admin;
 const Game = Firebase.Game;
@@ -130,8 +131,12 @@ exports.start = function(req, res){
             if (isGameOwner(snap.child(nodes.players).val(), reqObj.uuid)){
                 firebase.database().ref(nodes.games).child(reqObj.gamecode).child(nodes.round).child(nodes.started)
                 .set(true)
-                .then(()=> res.json({ result: "success" }))
-                .catch((error)=>{
+                .then(()=> {
+
+                    // TODO: Deligate work to manage the round to the round manager
+                    
+                    res.json({ result: "success" })
+                }).catch((error)=>{
                     utils.logError(error, "Error occurred while attempting to start the game");
                 });
             } else {
