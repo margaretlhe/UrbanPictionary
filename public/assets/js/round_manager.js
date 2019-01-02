@@ -22,7 +22,7 @@ socket.on(gameStartCountdown, function(data){
 socket.on(roundCountdown, function(data){
     if (data.active){
         $(`#${roundCountdown}`).text(data.timeLeft);
-        console.log(data.timeLeft);
+        // console.log(data.timeLeft);
     } else {
         $(`#${roundCountdown}`).remove();
         console.log("Round is ending");

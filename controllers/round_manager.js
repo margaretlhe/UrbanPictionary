@@ -6,7 +6,7 @@ const utils = require('./utils');
 const gameStartCountdown = "game-start-countdown";
 const roundCountdown = "round-countdown";
 
-setTimeout(testing, 2000);
+// setTimeout(testing, 2000);
 
 function testing(){
     var gamecode = '-LV1d95FdTQMRti66se8';
@@ -38,7 +38,7 @@ function testing(){
         var roundCountdown = new utils.CountdownTimer(2,0,1);
         roundCountdown.start(
             (timeLeft)=>{
-                console.log(timeLeft);
+                // console.log(timeLeft);
                 gameSocket.emit(roundCountdown, {
                     active: true,
                     timeLeft: timeLeft
