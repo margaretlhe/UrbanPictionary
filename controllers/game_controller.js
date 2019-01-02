@@ -48,15 +48,12 @@ exports.join_game = function (req, res) {
         uid: req.body.uid,
         displayName: req.body.displayName
     }
-    console.log(reqObj);
 
     // Attempt to join the player to the game.
     firebase.database().ref(nodes.games).child(reqObj.gamecode).once('value')
         .then((snap) => {
-            console.log("exists")
             // First we need to ensure the game exists.
             if (snap.exists()) {
-                console.log("Game exists")
                 // Then we need to ensure there's enough room for another player in the game
                 // and the player is not already in the game.
                 var playersInLobby = Object.keys(snap.child(nodes.players).val());
@@ -69,8 +66,6 @@ exports.join_game = function (req, res) {
                 // Add the player to the game by creating a new child node with the player's uid in the players node
                 // and setting the new child node to the player's object.
                 var newPlayer = new Player(reqObj.displayName, false, false);
-                console.log("Attempting to join game");
-                console.log(newPlayer);
                 firebase.database().ref(nodes.games).child(reqObj.gamecode).child(nodes.players).child(reqObj.uid)
                     .set(newPlayer)
                     .then(() => {
