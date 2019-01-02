@@ -20,7 +20,7 @@ $(document).ready(function(){
                 data.uid = response.user.uid;
                 data.displayName = displayName.val();
               
-                $.post("/game/join", data).then((res)=>{
+                $.post("/join", data).then((res)=>{
                     if (res.redirect){
                         window.location.replace(res.redirect);
                     }

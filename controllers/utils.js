@@ -1,3 +1,11 @@
+const nodes = require('../config/firebase').nodes;
+
+exports.getLobbyRedirectObj = function(gamecode, playerUuid) {
+    return {
+        redirect: `/game/lobby/${gamecode}?${nodes.uuid}=${playerUuid}`
+    };
+}
+
 exports.renderError = function(res, err, consoleMsg){
     // NOTE: This method should only be called from GET requests. If it's called
     //       from any other types of requests, it won't render anything.

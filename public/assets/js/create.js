@@ -17,7 +17,7 @@ $(document).ready(function() {
                 data.displayName = displayName.val();
 
                 // Create a new game with given data and user is redirected to new game.
-                $.post("/game/create", data)
+                $.post("/create", data)
                 .then((res)=>{
                     if (res.redirect){
                         // Redirect only if request returns a url.
