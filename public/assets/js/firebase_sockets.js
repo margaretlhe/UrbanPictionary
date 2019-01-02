@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    var gamecode = extractGameCodeFromUrl();
+    const gamecode = extractGameCodeFromUrl();
     const gameSnap = firebase.database().ref(nodes.games).child(gamecode);
 
     firebase.auth().onAuthStateChanged((user) => {
@@ -25,7 +25,7 @@ $(document).ready(function () {
                     }
                 }
             }).catch((error) => {
-                LogFirebaseError(error, "Error while checking if user is enrolled in game");
+                logError(error, "Error while checking if user is enrolled in game");
             });
     }
 
@@ -77,8 +77,6 @@ $(document).ready(function () {
         );
     }
 
-
-
     function removePlayerFromLobby(playerUuid) {
         // TEMP: This is an example.
         $(`#${playerUuid}`).remove();
@@ -88,5 +86,4 @@ $(document).ready(function () {
         let queryParams = extractQueryParametersFromUrl();
         window.location.replace(`/game/play/${gamecode}?${nodes.uuid}=${queryParams.uuid}`);
     }
-
 });

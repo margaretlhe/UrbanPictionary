@@ -1,4 +1,5 @@
 const utils = require('./utils');
+const roundManager = require('./round_manager');
 const Firebase = require('../config/firebase');
 const firebase = Firebase.admin;
 const Game = Firebase.Game;
@@ -54,27 +55,31 @@ exports.join_game = function (req, res) {
         .then((snap) => {
             // First we need to ensure the game exists.
             if (snap.exists()) {
-                // Then we need to ensure there's enough room for another player in the game
-                // and the player is not already in the game.
+                // Grab all of the players enrolled in the game.
                 var playersInLobby = Object.keys(snap.child(nodes.players).val());
-                if (playersInLobby.length < maxPlayersPerGame && !playersInLobby.includes(reqObj.uid)) {
-                    return true;
-                }
-            }
-        }).then((ableToJoin) => {
-            if (ableToJoin) {
-                // Add the player to the game by creating a new child node with the player's uid in the players node
-                // and setting the new child node to the player's object.
-                var newPlayer = new Player(reqObj.displayName, false, false);
-                firebase.database().ref(nodes.games).child(reqObj.gamecode).child(nodes.players).child(reqObj.uid)
-                    .set(newPlayer)
-                    .then(() => {
-                        res.json(getLobbyRedirectObj(reqObj.gamecode, newPlayer.uuid));
-                    }).catch((error) => {
-                        utils.logError(error, "ERROR while setting player defaults");
+
+                // Second check if the player is already enrolled in the game.
+                if (playersInLobby.includes(reqObj.uid)){
+                    // If player is already enrolled then simply return the lobby redirect json.
+                    var playerUuid = snap.child(nodes.players).child(reqObj.uid).child(nodes.uuid).val();
+                    res.json(getLobbyRedirectObj(reqObj.gamecode, playerUuid));
+                } else if (playersInLobby.length < maxPlayersPerGame) {
+                    // Add the player to the game by creating a new child node with the player's uid in the players node
+                    // and setting the new child node to the player's object.
+                    var newPlayer = new Player(reqObj.displayName, false, false);
+                    firebase.database().ref(nodes.games).child(reqObj.gamecode).child(nodes.players).child(reqObj.uid)
+                        .set(newPlayer)
+                        .then(() => {
+                            res.json(getLobbyRedirectObj(reqObj.gamecode, newPlayer.uuid));
+                        }).catch((error) => {
+                            utils.logError(error, "ERROR while setting player defaults");
+                        });
+                } else {
+                    // Game is full so redirect user to the game full view.
+                    res.json({
+                        redirect: `/errors/game-full?gamecode=${reqObj.gamecode}`
                     });
-            } else {
-                res.json(getLobbyRedirectObj(reqObj.gamecode));
+                }
             }
         }).catch((error) => {
             utils.logError(error, "ERROR while joining a game");
@@ -96,11 +101,11 @@ exports.lobby = function (req, res) {
                 // Get all players enrolled in game.
                 var allPlayers = snap.child(nodes.players).val();
 
-                // Check if game is full and player that submitted request is enrolled in game.
-                if (!getPlayerIfEnrolledInGame(allPlayers, reqObj.playerUuid)) {
+                // Ensure player count has not surpassed limits and the player that submitted request is enrolled in game.
+                if (Object.keys(allPlayers).length > maxPlayersPerGame){
+                    utils.renderError(res, "ERROR: There are more players in this game than maximum limit...something went wrong!");
+                } else if (!getPlayerIfEnrolledInGame(allPlayers, reqObj.playerUuid)) {
                     utils.renderError(res, "Error: You are not enrolled in this game!");
-                } else if (Object.keys(allPlayers).length > maxPlayersPerGame) {
-                    res.render('errors/game-full', reqObj);
                 } else {
                     // Use the firebase layout to render the lobby.
                     reqObj.layout = 'main-no-jquery';
@@ -130,9 +135,9 @@ exports.start = function (req, res) {
                 if (isGameOwner(snap.child(nodes.players).val(), reqObj.uuid)) {
                     firebase.database().ref(nodes.games).child(reqObj.gamecode).child(nodes.round).child(nodes.started)
                         .set(true)
-                        .then(() => res.json({
-                            result: "success"
-                        }))
+                        .then(() => {
+                            roundManager.startRound();
+                        })
                         .catch((error) => {
                             utils.logError(error, "Error occurred while attempting to start the game");
                         });

@@ -11,5 +11,10 @@ db.sequelize.sync().then(function(){
     // Set our app to listen on our port
     var server = app.listen(app.get('port'), function(){
         console.log(`Server listening on port ${server.address().port}`);
-    })
+    });
+
+    // Attach socket.io to server and set it as a global variable.
+    // We need this to be a global variable since we'll be creating dynamic 
+    // socket connections from dynamic namespaces/rooms.
+    global.globalSocketIo = require('socket.io')(server);
 })

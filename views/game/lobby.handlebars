@@ -32,11 +32,11 @@
             <h3 class="score"></h3>
         </div>
     </div>
+    {{#if owner}}
      <div class="d-flex flex-row justify-content-around">
-         {{#if owner}}
-            <button id="start-btn">START</button>
-            {{/if}}
-        </div>
+        <button id="start-btn">START</button>
+    </div>
+    {{/if}}
 </div>  
 <div class="rightInfo">
     <h2>Round Count: <span id="roundCount"></span></h2>
@@ -47,7 +47,6 @@
 </div>
 
 </div>
-
 
 {{> firebase-init }}
 <script src="/assets/js/firebase_sockets.js"></script>
