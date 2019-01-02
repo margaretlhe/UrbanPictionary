@@ -191,11 +191,76 @@ body {
     font-size: 30px;
 }
 
-#joinGameBtn {
+ #joinBtn {
     font-family: 'Amatic SC', cursive;
     background-color: #1FE96E;
     border-radius: 10px;
     height: 50px;
     font-size: 30px;
-    margin-top: 10px;
+    margin-top: 75px;
 }
+
+/* End Join Page */
+
+/* Lobby Page */
+.playersBox {
+    height: 500px;
+    width: 660px;
+}
+.player, #p1 {
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    border: 2px solid black;
+    text-align: center;
+
+}
+.name {
+    font-family: 'Amatic SC', cursive;
+    margin-top: 50px;
+    font-weight: 600;
+    font-size: 5em;
+}
+.score {
+    font-family: 'Amatic SC', cursive;
+    margin-top: 55px;
+}
+.row1 {
+    margin-bottom: 40px;
+}
+#p1 {
+    height: 200px;
+    width: 200px;
+}
+.lobbyInfo {
+    font-family: 'Amatic SC', cursive;
+}
+
+
+/* Judge View */
+.whiteboard {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+  }
+  
+  .colors {
+    position: fixed;
+  }
+  
+  .color {
+    display: inline-block;
+    height: 48px;
+    width: 48px;
+  }
+  
+  .color.black { background-color: black; }
+  .color.red { background-color: red; }
+  .color.green { background-color: green; }
+  .color.blue { background-color: blue; }
+  .color.yellow { background-color: yellow; }
+  

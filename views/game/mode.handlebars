@@ -5,42 +5,41 @@
             <div class="card">
                 <div class="card__face card__face--front">
                     <div class="hostOrJoin">
+
                         <button class="hostAndJoinBtn">
                             <span>Host a game</span>
                         </button>
-                        <button class="hostAndJoinBtn">
-                            <span>Join a game</span>
-                        </button>
+                        <form action="/game/join/">
+                            <button class="hostAndJoinBtn" type="submit" value="join">
+                                <span>Join a game</span>
+                            </button>
+                        </form>
                     </div>
                 </div>
                 <div class="card__face card__face--back">
 
                     <!-- NEED TO LINK BUTTONS TO CORRECT LOGIC-->
-                  <div class="modeWrapper" style="margin-right: 15px;">
-                        <button class="mode" >
-                            SFW
-                        </button>
-                  </div>
-                         <div class="modeWrapper" style="margin-left: 15px;">
-                        <button class="mode" >
-                            NSFW
-                        </button>
-                  </div>
-                    
-                       
-                  
+                    <form action="/game/create">
+                        <div class="modeWrapper mode" style="margin-right: 15px">
+                            <button type="submit" name="SFW" value="false">
+                                NSFW</button>
+                        </div>
+                        <div class="modeWrappermode" style="margin-left: 15px;">
+                            <button type="submit" name="SFW" value="true"> SFW</button>
+
+                        </div> 
+                    </form>
+
+
+
                 </div>
             </div>
         </div>
 
     </div>
 
-    <form action="/game/join/1">
-        <input type="submit" value="NSFW">
-    </form>
-    <form action="/game/join/">
-        <input type="submit" value="SFW">
-    </form>
+
+
 
 
     <script>

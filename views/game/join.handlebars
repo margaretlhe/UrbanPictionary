@@ -1,24 +1,18 @@
-<input type="hidden" id="sfw" value="{{sfw}}">
-
 {{!-- All this needs client-side validation --}}
 <div class="infoContainer">
-    {{#if sfw}}
-    <h1>SFW</h1>
-{{else}}
-    <h1>NSFW</h1>
-{{/if}}
 
+    <h1>Join A Game</h1>
 
-<form id="join-game">
-    <input type="text" id="display-name" placeholder="Display Name" class="placeHolderStyle">
-    <input type="text" name="gamecode" id="gameCodeInput" class="placeHolderStyle" placeholder="Game Code">
-    <button type="submit" id="joinGameBtn">Join Game</button>    
-</form>
+    <form id="join-game">
+        <input type="text" id="display-name" placeholder="Display Name" class="placeHolderStyle">
 
+        <input type="text" name="gamecode" id="gameCodeInput" class="placeHolderStyle" placeholder="Game Code">
 
+        <button type="submit" id="joinBtn">Join Game</button>
+
+    </form>
 </div>
 </div>
 
-
-{{> firebase-init }}
+{{> firebase-init}}
 <script src="/assets/js/join.js"></script>
