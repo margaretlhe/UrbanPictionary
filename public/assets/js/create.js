@@ -9,7 +9,6 @@ $(document).ready(function() {
         
         if (displayName.val()){
             auth.signInAnonymously((response)=>{
-                console.log("WTF");
                 // Since all of our users are anonymous, we need to update their display name each time (for now).
                 updateDisplayName(displayName.val());
 
@@ -17,7 +16,7 @@ $(document).ready(function() {
                 data.uid = response.user.uid;
                 data.displayName = displayName.val();
 
-                // Create a new game with the User's ID and user is redirected to new game.
+                // Create a new game with given data and user is redirected to new game.
                 $.post("/game/create", data)
                 .then((res)=>{
                     if (res.redirect){

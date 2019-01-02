@@ -124,20 +124,6 @@ exports.start = function (req, res) {
     }
 
     firebase.database().ref(nodes.games).child(reqObj.gamecode).once('value')
-<<<<<<< HEAD
-    .then((snap)=>{
-        // Ensure game actually exists.
-        if (snap.exists()){
-            // Ensure user that submitted post request to start the game is the game owner (only owners can start a game).
-            if (isGameOwner(snap.child(nodes.players).val(), reqObj.uuid)){
-                firebase.database().ref(nodes.games).child(reqObj.gamecode).child(nodes.round).child(nodes.started)
-                .set(true)
-                .then(()=> {
-                    roundManager.startRound(reqObj.gamecode);
-                }).catch((error)=>{
-                    utils.logError(error, "Error occurred while attempting to start the game");
-                });
-=======
         .then((snap) => {
             // Ensure game actually exists.
             if (snap.exists()) {
@@ -145,16 +131,15 @@ exports.start = function (req, res) {
                 if (isGameOwner(snap.child(nodes.players).val(), reqObj.uuid)) {
                     firebase.database().ref(nodes.games).child(reqObj.gamecode).child(nodes.round).child(nodes.started)
                         .set(true)
-                        .then(() => res.json({
-                            result: "success"
-                        }))
+                        .then(() => {
+                            roundManager.startRound();
+                        })
                         .catch((error) => {
                             utils.logError(error, "Error occurred while attempting to start the game");
                         });
                 } else {
                     utils.logError("Error: You don't have the permission to start the game");
                 }
->>>>>>> master
             } else {
                 utils.logError('Error: Game not found whie attempting to start the game');
             }

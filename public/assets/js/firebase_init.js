@@ -20,7 +20,6 @@ const nodes = { // TODO: This should be in one place where accessable by both cl
 };
 
 const auth = {
-
     signInAnonymously: (callback) => {
         firebase.auth().signInAnonymously()
         .then(callback)
@@ -30,4 +29,12 @@ const auth = {
     }
 
     // TODO: This can expand into other types of authentication.
+}
+
+function updateDisplayName(name) {
+    firebase.auth().currentUser.updateProfile({
+        displayName: name
+    }).catch((error) => {
+        logError(error, "Error Occurred while updating the user's display name");
+    });
 }

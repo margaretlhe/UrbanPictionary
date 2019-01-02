@@ -12,16 +12,8 @@ function extractQueryParametersFromUrl() {
     return queryParams;
 }
 
-function updateDisplayName(name) {
-    firebase.auth().currentUser.updateProfile({
-        displayName: name
-    }).catch((error) => {
-        logError(error, "Error Occurred while updating the user's display name");
-    })
-}
-
 function serializeFormInputs(arr) {
-    // Serialize form input data for post request.
+    // Serialize form input data that can be used for a request.
     var data = {};
     $.each(arr, (i, field) => {
         data[field.name] = field.value;

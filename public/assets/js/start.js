@@ -5,7 +5,7 @@ $(document).ready(function(){
         $.post(`/game/start/${extractGameCodeFromUrl()}`, 
         extractQueryParametersFromUrl())
         .catch((error)=>{
-            LogFirebaseError(error, "Error occurred while sending a post request to join a new game");
+            logError(error, "Error occurred while sending a post request to join a new game");
         });
     });      
 })
