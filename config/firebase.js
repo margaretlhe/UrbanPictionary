@@ -24,7 +24,7 @@ admin.initializeApp({
 
 exports.admin = admin;
 
-exports.nodes = { // TODO: This should be in one place where accessable by both client and server (not sure where yet).
+exports.nodes = { // TODO: This should be in one place where accessable by both client and server (not sure where yet..db?).
     games: "games",
     players: "players",
     round: "round",
@@ -34,6 +34,8 @@ exports.nodes = { // TODO: This should be in one place where accessable by both 
     owner: "owner",
     judge: "judge"
 };
+
+exports.maxPlayersPerGame = 5;
 
 exports.Game = function(ownerUid, ownerObj, sfw){
     // Set default values.
@@ -57,10 +59,10 @@ exports.Player = function(displayName, owner, judge){
     this.owner = owner,
     this.judge = judge,
     this.score = 0,
-    // Important difference between the player's uid and a player's uuid.
-    // - uid: Player's auth uid as defined in firebase's authenticated users.
-    // - uuid: Generated unique id to represent the user for a given game.
+    // Difference between the player's uid and uuid:
+    // - uid: Player's private auth uid as defined in firebase's authenticated users.
+    // - uuid: Generated public unique id to represent the user for a given game.
     //         This is generated to be able to identify the user in a game on the client side
-    //         without having to expose the user's auth uid.
+    //         without having to expose the user's private auth uid.
     this.uuid = uuidv1()
 };

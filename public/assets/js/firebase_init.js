@@ -9,7 +9,7 @@ const config = {
 };
 firebase.initializeApp(config);
 
-const nodes = { // TODO: This should be in one place where accessable by both client and server (not sure where yet).
+const nodes = { // TODO: This should be in one place where accessable by both client and server (not sure where yet...db?).
     games: "games",
     players: "players",
     round: "round",

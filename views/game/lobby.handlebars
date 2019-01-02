@@ -3,10 +3,6 @@
     <div class="leftInfo">
 <h3 class="lobbyInfo">This is the lobby for game: {{gamecode}}</h3>
 <br>
-{{#if owner}}
-
-{{/if}}
-<br>
 <h2>Mode: <span id="sfw"></span></h2>
 
 
@@ -37,7 +33,9 @@
         </div>
     </div>
      <div class="d-flex flex-row justify-content-around">
+         {{#if owner}}
             <button id="start-btn">START</button>
+            {{/if}}
         </div>
 </div>  
 <div class="rightInfo">
