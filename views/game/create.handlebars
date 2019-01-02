@@ -1,0 +1,20 @@
+{{!-- All this needs client-side validation --}}
+<div class="infoContainer">
+    {{#if SFW}}
+    <h1>SFW</h1>
+    {{else}}
+    <h1>NSFW</h1>
+    {{/if}}
+
+    <form id="create-game">
+        <input type="hidden" id="sfw" value="{{SFW}}">
+
+        <input type="text" id="display-name" placeholder="Display Name" class="placeHolderStyle">
+
+        <button type="submit" id="createBtn">Create A Game</button>
+
+    </form>
+</div>
+</div>
+{{> firebase-init}}
+<script src="/assets/js/create.js"></script>
