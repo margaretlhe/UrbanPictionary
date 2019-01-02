@@ -50,6 +50,11 @@ exports.join_game = function (req, res) {
                         redirect: `/errors/game-full?gamecode=${reqObj.gamecode}`
                     });
                 }
+            } else {
+                // Game was not found so redirect user to game-not-found page.
+                res.json({
+                    redirect: `/errors/game-not-found?gamecode=${reqObj.gamecode}`
+                });
             }
         }).catch((error) => {
             utils.logError(error, "ERROR while joining a game");
