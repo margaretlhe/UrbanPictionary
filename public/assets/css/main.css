@@ -1,5 +1,6 @@
 body {
     background-color: #89CEE9;
+    font-family: 'Amatic SC', cursive;
 }
 
 .titleContainer {
@@ -8,7 +9,6 @@ body {
 }
 
 #title {
-    font-family: 'Amatic SC', cursive;
     font-size: 100px;
     font-weight: 600;
     color: #ffffff;
@@ -113,7 +113,6 @@ body {
 }
 
 .mode {
-    font-family: 'Amatic SC', cursive;
     color: #000000;
     font-size: 120px;
     height: 200px;
@@ -136,7 +135,6 @@ body {
 }
 
 .hostAndJoinBtn>span {
-    font-family: 'Amatic SC', cursive;
     font-size: 35px;
     position: relative;
     bottom: 50px;
@@ -151,7 +149,6 @@ body {
     width: 650px;
     margin: 0 auto;
     margin-top: 80px;
-    font-family: 'Amatic SC', cursive;
     background-color: #FFBD6F;
     display: flex;
     flex-direction: column;
@@ -192,7 +189,7 @@ body {
 }
 
  #joinBtn {
-    font-family: 'Amatic SC', cursive;
+
     background-color: #1FE96E;
     border-radius: 10px;
     height: 50px;
@@ -216,13 +213,12 @@ body {
 
 }
 .name {
-    font-family: 'Amatic SC', cursive;
     margin-top: 50px;
     font-weight: 600;
     font-size: 5em;
 }
 .score {
-    font-family: 'Amatic SC', cursive;
+
     margin-top: 55px;
 }
 .row1 {
@@ -232,13 +228,8 @@ body {
     height: 200px;
     width: 200px;
 }
-.lobbyInfo {
-    font-family: 'Amatic SC', cursive;
-}
-
-
-/* Judge View */
-.whiteboard {
+/* Drawer View */
+.drawerCanvas {
     height: 100%;
     width: 100%;
     position: absolute;
@@ -246,6 +237,7 @@ body {
     right: 0;
     bottom: 0;
     top: 0;
+    background-color: #ffffff;
   }
   
   .colors {
@@ -263,4 +255,12 @@ body {
   .color.green { background-color: green; }
   .color.blue { background-color: blue; }
   .color.yellow { background-color: yellow; }
-  
+
+  /* Judge View */
+  .judgeViewCanvas {
+      height: 38vh;
+      width: 40vw;
+      background-color: #ffffff;
+      margin: 10px;
+      margin-top: 0;
+  }
