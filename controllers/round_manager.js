@@ -8,15 +8,33 @@ const roundCountdown = "round-countdown";
 
 // setTimeout(testing, 2000);
 
+function sockets(){
+    var gamecode = '-LV2jTcUX3273QIjX4hv';
+    var gameSocket = global.globalSocketIo
+                    .of(`/game/play/${gamecode}`)
+                    .on('connection', function (socket) {
+                        // Need to set a connection handler to initilize the socket.
+                        console.log(socket);
+                        console.log("test")
+                    });
+                
+}
+
+
 function testing(){
-    var gamecode = '-LV1d95FdTQMRti66se8';
+    var gamecode = '-LV2jTcUX3273QIjX4hv';
     var gameSocket = globalSocketIo
                     .of(`/game/play/${gamecode}`)
                     .on('connection', function (socket) {
                         // Need to set a connection handler to initilize the socket.
+                        console.log(socket);
+                        console.log("test")
                     });
                 
+                
+    console.log(gameSocket);
     var gameCountdown = new utils.CountdownTimer(0, 10, 1);
+    
     gameCountdown.start(
         (timeLeft)=>{
             gameSocket.emit(gameStartCountdown, {
@@ -67,7 +85,9 @@ function testing(){
         //     '/chat': 'will get'
         // });
 }
-
+/*
+exports.sockets= sockets();
+*/
 exports.startRound = function(gamecode){
-    
+
 }
