@@ -1,5 +1,6 @@
 body {
     background-color: #89CEE9;
+    font-family: 'Amatic SC', cursive;
 }
 
 .titleContainer {
@@ -8,7 +9,6 @@ body {
 }
 
 #title {
-    font-family: 'Amatic SC', cursive;
     font-size: 100px;
     font-weight: 600;
     color: #ffffff;
@@ -113,7 +113,6 @@ body {
 }
 
 .mode {
-    font-family: 'Amatic SC', cursive;
     color: #000000;
     font-size: 120px;
     height: 200px;
@@ -136,7 +135,6 @@ body {
 }
 
 .hostAndJoinBtn>span {
-    font-family: 'Amatic SC', cursive;
     font-size: 35px;
     position: relative;
     bottom: 50px;
@@ -151,7 +149,6 @@ body {
     width: 650px;
     margin: 0 auto;
     margin-top: 80px;
-    font-family: 'Amatic SC', cursive;
     background-color: #FFBD6F;
     display: flex;
     flex-direction: column;
@@ -159,7 +156,6 @@ body {
     align-content: center;
     text-align: center;
     border-radius: 30px;
-
 }
 
 .infoContainer>h1 {
@@ -191,8 +187,8 @@ body {
     font-size: 30px;
 }
 
- #joinBtn {
-    font-family: 'Amatic SC', cursive;
+#joinBtn {
+
     background-color: #1FE96E;
     border-radius: 10px;
     height: 50px;
@@ -207,7 +203,9 @@ body {
     height: 500px;
     width: 660px;
 }
-.player, #p1 {
+
+.player,
+#p1 {
     height: 150px;
     width: 150px;
     border-radius: 50%;
@@ -215,52 +213,77 @@ body {
     text-align: center;
 
 }
+
 .name {
-    font-family: 'Amatic SC', cursive;
     margin-top: 50px;
     font-weight: 600;
     font-size: 5em;
 }
+
 .score {
-    font-family: 'Amatic SC', cursive;
+
     margin-top: 55px;
 }
+
 .row1 {
     margin-bottom: 40px;
 }
+
 #p1 {
     height: 200px;
     width: 200px;
 }
-.lobbyInfo {
-    font-family: 'Amatic SC', cursive;
-}
 
-
-/* Judge View */
-.whiteboard {
-    height: 100%;
-    width: 100%;
+/* Drawer View */
+#drawerCanvas {
     position: absolute;
+    top: 100px;
+    bottom: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    top: 0;
-  }
-  
-  .colors {
-    position: fixed;
-  }
-  
-  .color {
+    height: 660px;
+    width: 1175px;
+    background-color: #ffffff;
+    margin: auto;
+}
+
+.colors {
+    position: relative;
+    top: 15px;
+    margin: 0 auto;
+}
+
+.color {
     display: inline-block;
     height: 48px;
     width: 48px;
-  }
-  
-  .color.black { background-color: black; }
-  .color.red { background-color: red; }
-  .color.green { background-color: green; }
-  .color.blue { background-color: blue; }
-  .color.yellow { background-color: yellow; }
-  
+}
+
+.color.black {
+    background-color: black;
+}
+
+.color.red {
+    background-color: red;
+}
+
+.color.green {
+    background-color: green;
+}
+
+.color.blue {
+    background-color: blue;
+}
+
+.color.yellow {
+    background-color: yellow;
+}
+
+/* Judge View */
+.judgeViewCanvas {
+    height: 380px;
+    width: 675px;
+    background-color: #ffffff;
+    margin: 10px;
+    margin-top: 0;
+}

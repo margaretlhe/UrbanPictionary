@@ -1,16 +1,18 @@
-{{> round-info }}
+{{> title-html}}
 
-<h1>I AM A JUDGE</h1>
-<canvas class="whiteboard" ></canvas>
-
-  <div class="colors">
-    <div class="color black"></div>
-    <div class="color red"></div>
-    <div class="color green"></div>
-    <div class="color blue"></div>
-    <div class="color yellow"></div>
-  </div>
-
+<div class="container-fluid">
+  <div >
+  <div id="roundInfo" class="d-flex flex-row justify-content-between">
+  {{> round-info }}
+</div>
+<div class="d-flex flex-row flex-wrap canvasContainer">
+  <canvas class="judgeViewCanvas"></canvas>
+  <canvas class="judgeViewCanvas"></canvas>
+  <canvas class="judgeViewCanvas"></canvas>
+  <canvas class="judgeViewCanvas"></canvas>
+</div>
+</div>
+</div>
 {{> firebase-init }}
 {{> round-manager }}
 <script src="/assets/js/judge.js"></script>
