@@ -4,8 +4,8 @@
         <div class="scene scene--card">
             <div class="card">
                 <div class="card__face card__face--front">
-                    <div class="hostOrJoin">
-
+                    
+                    <div class="d-flex flex-row justify-content-around buttonWrapper">
                         <button class="hostAndJoinBtn">
                             <span>Host a game</span>
                         </button>
@@ -14,16 +14,18 @@
                                 <span>Join a game</span>
                             </button>
                         </form>
-                    </div>
+          </div>
                 </div>
                 <div class="card__face card__face--back">
 
-                    <form action="/create">
-                        <div class="modeWrapper mode" style="margin-right: 15px">
-                            <button type="submit" name="SFW" value="false">NSFW</button>
+                    <form action="/create"> 
+                     <div class="d-flex flex-row justify-content-around">
+                        <div class="modeWrapper" style="margin-right: 15px">
+                            <button class="hostAndJoinBtn mode" type="submit" name="SFW" value="false">NSFW</button>
                         </div>
-                        <div class="modeWrappermode" style="margin-left: 15px;">
-                            <button type="submit" name="SFW" value="true">SFW</button>
+                        <div class="modeWrapper" style="margin-left: 15px;">
+                            <button class="hostAndJoinBtn mode" type="submit" name="SFW" value="true">SFW</button>
+                        </div>
                         </div>
                     </form>
                 </div>

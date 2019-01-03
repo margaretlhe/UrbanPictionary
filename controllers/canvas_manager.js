@@ -1,13 +1,13 @@
-
-function sockets(){
-    var gamecode = '-LV2jTcUX3273QIjX4hv';
-    var gameSocket = global.globalSocketIo
-                    .of(`/game/play/${gamecode}`)
-                    .on('connection', function (socket) {
-                        // Need to set a connection handler to initilize the socket.
-                        console.log(socket);
-                        console.log("test")
-                    });
-                
+function sockets() {
+    let socket = global.globalSocketIo;
+    socket.on('connection', function(socket){
+        console.log('a user connected')
+        socket.on('drawing', function(data) {
+            console.log(data)
+        })
+        socket.on('disconnect', function(){
+          console.log('user disconnected');
+        });
+      });
+      
 }
-
