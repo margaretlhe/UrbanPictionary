@@ -1,5 +1,9 @@
 const nodes = require('../config/firebase').nodes;
 
+exports.getSocketConnection = function(gamecode){
+    return globalSocketIo.of(`/game/play/${gamecode}`);
+}
+
 exports.getLobbyRedirectObj = function(gamecode, playerUuid) {
     return {
         redirect: `/game/lobby/${gamecode}?${nodes.uuid}=${playerUuid}`
