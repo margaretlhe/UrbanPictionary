@@ -1,73 +1,76 @@
-// NOTES:
-// 1. Method that receives the game code
-// 2. Round manager (RM) will need to go and get the game from firebase
-// 3. RM will need to know who's the judge to be able to somehow redirect users to the judges view.
 const utils = require('./utils');
-const gameStartCountdown = "game-start-countdown";
-const roundCountdown = "round-countdown";
+const Firebase = require('../config/firebase');
+const firebase = Firebase.admin;
+const nodes = Firebase.nodes;
+const gameStartCountdownId = "game-start-countdown";
+const roundCountdownId = "round-countdown";
+const gameTimerInSeconds = 10; // Timer used to countdown when the game begins.
+const roundTimerInSeconds = 30; // Timer used to countdown when the round is over.
 
-// setTimeout(testing, 2000);
+exports.startRound = function(gamecode, judgeUuid){
+    activateTimer(gamecode);
+    setJudgeReconnectSocket(gamecode);
+    startGameCountdown(gamecode, judgeUuid);
+}
 
-function testing(){
-    var gamecode = '-LV1d95FdTQMRti66se8';
-    var gameSocket = globalSocketIo
-                    .of(`/game/play/${gamecode}`)
-                    .on('connection', function (socket) {
-                        // Need to set a connection handler to initilize the socket.
-                    });
-                
-    var gameCountdown = new utils.CountdownTimer(0, 10, 1);
+function startGameCountdown(gamecode, judgeUuid){
+    
+    var gameSocket = utils.getSocketConnection(gamecode);
+    var gameCountdown = new utils.CountdownTimer(0, gameTimerInSeconds, 1);
+
     gameCountdown.start(
         (timeLeft)=>{
-            gameSocket.emit(gameStartCountdown, {
+            // During each time interval, we want to emit the time left.
+            gameSocket.emit(gameStartCountdownId, timeLeft);
+        },
+        ()=>{
+            // At the end of the timer, we want to enable the drawing canvas,
+            // emit the word and start the round timer.
+
+            // TODO: Need to instantiate canvas manager HERE.
+
+            gameSocket.emit(gameStartCountdownId, "GO!");
+            gameSocket.emit('word', "Some Funny Word!"); // TODO: Need to call function that gets word.
+            gameSocket.emit(roundCountdownId, {
+                active: true,
+                timeLeft: utils.getFriendlyTimeLeft(roundTimerInSeconds)
+            });
+            startRoundCountdown(gamecode, judgeUuid);
+        }
+    );
+}
+
+function startRoundCountdown(gamecode, judgeUuid){
+
+    var gameSocket = utils.getSocketConnection(gamecode);
+    var roundCountdown = new utils.CountdownTimer(0,roundTimerInSeconds,1);
+    
+    roundCountdown.start(
+        (timeLeft)=>{
+            // During each time interval, we want to emit the time left.
+            gameSocket.emit(roundCountdownId, {
                 active: true,
                 timeLeft: timeLeft
             });
         },
         ()=>{
-            gameSocket.emit(gameStartCountdown, {
+            // At the end of the round timer, we want to emit a signal to notify all clients
+            // that the the round is over and proceed to end the round.
+            gameSocket.emit(roundCountdownId, {
                 active: false,
-                timeLeft: 0
+                timeLeft: "Stop!",
+                judgeUuid: judgeUuid
             });
-            startRound();
         }
     );
-
-    function startRound(){
-        console.log("Round is about to start");
-        var roundCountdown = new utils.CountdownTimer(2,0,1);
-        roundCountdown.start(
-            (timeLeft)=>{
-                // console.log(timeLeft);
-                gameSocket.emit(roundCountdown, {
-                    active: true,
-                    timeLeft: timeLeft
-                });
-            },
-            ()=>{
-                gameSocket.emit(roundCountdown, {
-                    active: false,
-                    timeLeft: 0
-                });
-            }
-        );
-    }
-
-    // setTimeout(()=>{
-    //     console.log("This got triggered");
-    //     gameSocket.emit('word', "Some funny word");
-    // }, 5000);
-    
-    // socket.emit('testing', {
-        //     that: 'only',
-        //     '/chat': 'will get'
-        // });
-        // gameSocket.emit('testing', {
-        //     everyone: 'in',
-        //     '/chat': 'will get'
-        // });
 }
 
-exports.startRound = function(gamecode){
-    
+function activateTimer(gamecode){
+    // TODO: Set 'timerActive' to true for round
+}
+
+function setJudgeReconnectSocket(gamecode){
+    // TODO: Set a on 'connection' socket listener that, upon a user connect event,
+    //       will check if the user is a judge and if the timerActive is false.
+    //       If so, then we'll need to emit a signal to the judge client that will enable all of the judge "select winner" functionality.
 }
