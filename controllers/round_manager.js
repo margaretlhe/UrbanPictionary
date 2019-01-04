@@ -5,21 +5,19 @@
 const utils = require('./utils');
 const gameStartCountdown = "game-start-countdown";
 const roundCountdown = "round-countdown";
+const canvasManager = "./canvas_manager.js";
 
-// setTimeout(testing, 2000);
+ setTimeout(testing, 2000);
 
 function testing(){
     var gamecode = '-LV2jTcUX3273QIjX4hv';
     var gameSocket = globalSocketIo
                     .of(`/game/play/${gamecode}`)
-                    .on('connection', function (socket) {
+                    .on('connection', function (socket) {                      
                         // Need to set a connection handler to initilize the socket.
-                        console.log(socket);
                         console.log("test")
                     });
-                
-                
-    console.log(gameSocket);
+//    console.log(gameSocket);
     var gameCountdown = new utils.CountdownTimer(0, 10, 1);
     
     gameCountdown.start(
