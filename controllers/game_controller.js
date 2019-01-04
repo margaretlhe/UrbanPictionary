@@ -5,6 +5,16 @@ const firebase = Firebase.admin;
 const nodes = Firebase.nodes;
 const maxPlayersPerGame = Firebase.maxPlayersPerGame;
 
+exports.lobby_redirect = function(req, res){
+    // Create an object from the required post request parameters
+    var reqObj = {
+        gamecode: req.params.gamecode,
+        uid: req.body.uid,
+    }
+
+    // TODO: Return json that redirect the user back to the lobby.
+}
+
 exports.lobby = function (req, res) {
     // Extract required info from request. This will also be used to pass into some of our views.
     var reqObj = {
@@ -50,12 +60,15 @@ exports.start = function (req, res) {
         .then((snap) => {
             // Ensure game actually exists.
             if (snap.exists()) {
+                // Get all players enrolled in game.
+                var allPlayers = snap.child(nodes.players).val();
                 // Ensure user that submitted post request to start the game is the game owner (only owners can start a game).
-                if (isGameOwner(snap.child(nodes.players).val(), reqObj.uuid)) {
+                if (isGameOwner(allPlayers, reqObj.uuid)) {
                     firebase.database().ref(nodes.games).child(reqObj.gamecode).child(nodes.round).child(nodes.started)
                         .set(true)
                         .then(() => {
-                            roundManager.startRound();
+                            // Use round manager to start the round!
+                            roundManager.startRound(reqObj.gamecode, getJudgeUuid(allPlayers));
                         })
                         .catch((error) => {
                             utils.logError(error, "Error occurred while attempting to start the game");
@@ -108,8 +121,54 @@ exports.play = function (req, res) {
         });
 }
 
+exports.end_round = function(req, res){
+    // Extract required information from post request.
+    var reqObj = {
+        gamecode: req.params.gamecode,
+        uuid: req.body.uuid,
+        winner: req.body.winner
+    }
+
+    var gameRef = firebase.database().ref(nodes.games).child(reqObj.gamecode);
+
+    gameRef.child(nodes.players).once('value')
+        .then((snap) => {
+            if (snap.exists()){
+                // Ensure that player that submitted post request to end the round is the current judge.
+                if (reqObj.uuid === getJudgeUuid(snap.val())){
+                    // Attemt to stop the game.
+                    gameRef.child(nodes.round).child(nodes.started)
+                        .set(false)
+                        .then(() => {
+
+                            // TODO: Need to assign next judge and increment winner's score.
+
+                        }).catch((error) => {
+                            utils.logError(error, "Error: FAILED to stop the round!");
+                            res.json({
+                                result: 'Error: Failed to stop the round'
+                            });
+                        });
+                } else {
+                    res.json({
+                        result: `Error: '${reqObj.uuid}' is not currently a judge and cannot end the round`
+                    });
+                }
+            } else {
+                res.json({ 
+                    result: "Error: Game not found"
+                });
+            }
+        }).catch((error) => {
+            utils.logError(error, "Error: Something bad happened while attempting to stop the round");
+            res.json({
+                result: 'Error: Failed to stop the round'
+            });
+        });
+}
+
 function isGameOwner(players, uuid) {
-    return extractPlayerInfo(players, uuid, nodes.owner)
+    return extractPlayerInfo(players, uuid, nodes.owner);
 }
 
 function isRoundJudge(players, uuid) {
@@ -126,4 +185,13 @@ function extractPlayerInfo(players, uuid, property) {
 function getPlayerIfEnrolledInGame(players, uuid) {
     // Get player's auth uid based on the player's assigned uuid for the given game.
     return Object.keys(players).filter(player => players[player].uuid === uuid).pop();
+}
+
+function getJudgeUuid(players){
+    // Find the judge player and return the judge's public uuid.
+
+    // TODO: Still need to test this out to make sure it works (don't know if I need to use bool or string)
+    
+    let judgeUid = Object.keys(players).filter(player => players[player].judge === true).pop();
+    return players[judgeUid].uuid;
 }
