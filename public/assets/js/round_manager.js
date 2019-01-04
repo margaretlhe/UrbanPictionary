@@ -30,33 +30,33 @@ function setRoundManagerSockets(user){
             if (reconnect){
                 enableJudgeFunctionality(user);
             }
-        })
-    });
+        });
 
-    socket.on(wordId, (word) => {
-        $(`#${wordId}`).text(word);
-    });
-    
-    socket.on(gameStartCountdown, (data) => {
-        $(`#${gameStartCountdown}`).text(data);
-    });
-    
-    socket.on(roundCountdown, (data) => {
-        $(`#${roundCountdown}`).text(data.timeLeft);
-    
-        // Check if round is still active.
-        if (!data.active){
-            // Check if client it a judge.
-            if (data.judgeUuid !== playerUuid){
-                // Reroute client to judge view.
-                window.location.replace(`/play/${extractGameCodeFromUrl()}?uuid=${data.judgeUuid}`);
-            } else {
-                enableJudgeFunctionality(user);
+        socket.on(wordId, (word) => {
+            $(`#${wordId}`).text(word);
+        });
+        
+        socket.on(gameStartCountdown, (data) => {
+            $(`#${gameStartCountdown}`).text(data);
+        });
+        
+        socket.on(roundCountdown, (data) => {
+            $(`#${roundCountdown}`).text(data.timeLeft);
+        
+            // Check if round is still active.
+            if (!data.active){
+                // Check if client it a judge.
+                if (data.judgeUuid !== playerUuid){
+                    // Reroute client to judge view.
+                    window.location.replace(`/play/${extractGameCodeFromUrl()}?uuid=${data.judgeUuid}`);
+                } else {
+                    enableJudgeFunctionality(user);
+                }
             }
-        }
+        });
+    
+        // TODO: Set socket listeners for hover functionality and when the judge selects a winner
     });
-
-    // TODO: Set socket listeners for hover functionality and when the judge selects a winner
 
     // Set firebase socket listener that will notify clients when the round is officially over (after judge selects winner).
     firebase.database().ref(nodes.game).child(gamecode).child(nodes.round).child(nodes.started)
