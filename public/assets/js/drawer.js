@@ -8,29 +8,25 @@
 
 const canvas = document.getElementById('drawerCanvas');
 const ctx = canvas.getContext('2d');
+const uuid = extractQueryParametersFromUrl().uuid;
 canvas.width = canvas.offsetWidth;
 canvas.height = canvas.offsetHeight;
 ctx.strokeStyle = '#000';
 ctx.lineWidth = 1;
 ctx.lineJoin = 'round';
 ctx.lineCap = 'round';
-
 let isDrawing = false;
 let lastX = 0;
 let lastY = 0;
 let direction = true;
 
-setTimeout(() => {
-    let gameCode = extractGameCodeFromUrl();
-    let socket = io('/game/play/' + gameCode);
+socket.on('connect', function (socket) {
+    console.log("drawer is connected");
 
-    socket.on('connection', function (socket) {
-        console.log("drawer is connected");
-    })
-    
-    console.log(socket);
-    console.log("timeout done")
-}, 5000);
+})
+
+console.log(socket);
+console.log("timeout done")
 
 function draw(e) {
     if (!isDrawing) {
@@ -46,11 +42,12 @@ function draw(e) {
 
 function getDataAndEmit() {
     let data = canvas.toDataURL()
-    let uuid // =  NEED TO GET UUID 
-    // Emit drawing event and send uuid (corresponding canvas ID) and base64 image of canvas
-
-    socket.emit('drawing', data);
-}
+    let dataObj = {
+        data: data,
+        uuid: playerUuid
+    };
+    socket.emit('drawing', dataObj);
+};
 
 canvas.addEventListener('mousemove', draw);
 canvas.addEventListener('mousedown', (e) => {
@@ -59,8 +56,8 @@ canvas.addEventListener('mousedown', (e) => {
 });
 
 canvas.addEventListener('mouseup', () => {
-    isDrawing = false
-    getDataAndEmit()
+    isDrawing = false;
+    getDataAndEmit();
 });
 
 canvas.addEventListener('mouseout', () => isDrawing = false);

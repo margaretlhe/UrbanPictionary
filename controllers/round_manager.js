@@ -1,4 +1,5 @@
 const utils = require('./utils');
+const canvasManager = require('./canvas_manager');
 const Firebase = require('../config/firebase');
 const firebase = Firebase.admin;
 const nodes = Firebase.nodes;
@@ -6,7 +7,9 @@ const gameStartCountdownId = "game-start-countdown";
 const roundCountdownId = "round-countdown";
 const gameTimerInSeconds = 10; // Timer used to countdown when the game begins.
 const roundTimerInSeconds = 30; // Timer used to countdown when the round is over.
-
+ setTimeout(() => {
+    exports.startRound('-LVMV3h36OUlcs7Lx-P0','1703dff0-0fe8-11e9-8237-739a2b570d29')
+}, 2000); 
 exports.startRound = function(gamecode, judgeUuid){
     activateTimer(gamecode);
     setJudgeReconnectSocket(gamecode);
@@ -28,6 +31,8 @@ function startGameCountdown(gamecode, judgeUuid){
             // emit the word and start the round timer.
 
             // TODO: Need to instantiate canvas manager HERE.
+            console.log("wtf");
+            canvasManager.setCanvasManager(gameSocket);
 
             gameSocket.emit(gameStartCountdownId, "GO!");
             gameSocket.emit('word', "Some Funny Word!"); // TODO: Need to call function that gets word.

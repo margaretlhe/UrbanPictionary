@@ -48,7 +48,7 @@ function setRoundManagerSockets(user){
                 // Check if client it a judge.
                 if (data.judgeUuid !== playerUuid){
                     // Reroute client to judge view.
-                    window.location.replace(`/play/${extractGameCodeFromUrl()}?uuid=${data.judgeUuid}`);
+                 //   window.location.replace(`/play/${extractGameCodeFromUrl()}?uuid=${data.judgeUuid}`);
                 } else {
                     enableJudgeFunctionality(user);
                 }

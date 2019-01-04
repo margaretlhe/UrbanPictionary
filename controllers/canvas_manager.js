@@ -1,18 +1,18 @@
-setTimeout(() => {
+const utils = require('./utils');
 
-    socket.on('connection', function(socket){
-        console.log('a user connected')     
+exports.setCanvasManager = function (socket) {
+    // let socket = utils.getSocketConnection(gamecode);
+    socket.on('connection', function () {
+        console.log("someone has connected!")
 
-            socket.on('drawing', function(data) {
-                console.log(data);
+            socket.on('drawing', function(dataObj) {
+                console.log(dataObj);
                 console.log("drawing event triggered");
-                socket.emit('drawingTojudge', data)
-             })
-
-        socket.on('disconnect', function(socket){
-          console.log('user disconnected');
+                socket.emit('drawingTojudge', dataObj);
+            });
+        socket.on('disconnect', function (socket) {
+            console.log('user disconnected');
         });
-      });
-      console.log('CANVAS MANAGER')
-}, 5000);
-
+        console.log('CANVAS MANAGER');
+    });
+};
