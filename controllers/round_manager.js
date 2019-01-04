@@ -14,7 +14,7 @@ exports.startRound = function(gamecode, judgeUuid){
 }
 
 function startGameCountdown(gamecode, judgeUuid){
-    
+
     var gameSocket = utils.getSocketConnection(gamecode);
     var gameCountdown = new utils.CountdownTimer(0, gameTimerInSeconds, 1);
 
@@ -28,9 +28,8 @@ function startGameCountdown(gamecode, judgeUuid){
             // emit the word and start the round timer.
 
             // TODO: Need to instantiate canvas manager HERE.
-
+            setGameWord(gamecode, "Some Funny Word!"); // TODO: Need to call function that gets word (maybe even before so we have the word ready to go on this step).
             gameSocket.emit(gameStartCountdownId, "GO!");
-            gameSocket.emit('word', "Some Funny Word!"); // TODO: Need to call function that gets word.
             gameSocket.emit(roundCountdownId, {
                 active: true,
                 timeLeft: utils.getFriendlyTimeLeft(roundTimerInSeconds)
@@ -63,6 +62,14 @@ function startRoundCountdown(gamecode, judgeUuid){
             });
         }
     );
+}
+
+function setGameWord(gamecode, word){
+    firebase.database().ref(nodes.games).child(gamecode).child(nodes.round).child(nodes.word)
+        .set(word)
+        .catch((error) => {
+            utils.logError(error, "Error: Failed to set the game word!");
+        });
 }
 
 function activateTimer(gamecode){
