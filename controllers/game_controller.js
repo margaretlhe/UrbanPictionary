@@ -12,7 +12,16 @@ exports.lobby_redirect = function(req, res){
         uid: req.body.uid,
     }
 
-    // TODO: Return json that redirect the user back to the lobby.
+    firebase.database().ref(nodes.games).child(reqObj.gamecode).child(reqObj.uid).child(node.uuid).once('value')
+        .then((snap) => {
+            if (snap.exists()){
+                res.json(utils.getLobbyRedirectObj(reqObj.gamecode, snap.val()));
+            } else {
+                utils.logError("ERROR: player UUID does not exists");
+            }
+        }).catch((error) => {
+            utils.logError(error, "ERROR while attempting to get player UUID");
+        });
 }
 
 exports.lobby = function (req, res) {
@@ -125,8 +134,8 @@ exports.end_round = function(req, res){
     // Extract required information from post request.
     var reqObj = {
         gamecode: req.params.gamecode,
-        uuid: req.body.uuid,
-        winner: req.body.winner
+        judgeUuid: req.body.judgeUuid,
+        winnerUuid: req.body.winnerUuid,
     }
 
     var gameRef = firebase.database().ref(nodes.games).child(reqObj.gamecode);
@@ -134,15 +143,22 @@ exports.end_round = function(req, res){
     gameRef.child(nodes.players).once('value')
         .then((snap) => {
             if (snap.exists()){
+                var allPlayers = snap.val();
                 // Ensure that player that submitted post request to end the round is the current judge.
-                if (reqObj.uuid === getJudgeUuid(snap.val())){
+                if (reqObj.judgeUuid === getJudgeUuid(allPlayers)){
                     // Attemt to stop the game.
                     gameRef.child(nodes.round).child(nodes.started)
                         .set(false)
                         .then(() => {
+                            // Incrememt winner score.
+                            var winnerUid = getPlayerIfEnrolledInGame(allPlayers, reqObj.winnerUuid);
+                            incrementWinnerScore(reqObj.gamecode, winnerUid);
 
-                            // TODO: Need to assign next judge and increment winner's score.
+                            // Assign the judge for the next round.
+                            assignNextJudge(allPlayers, reqObj.gamecode);
 
+                            // Reset word to defeault.
+                            resetGameWord(reqObj.gamecode);
                         }).catch((error) => {
                             utils.logError(error, "Error: FAILED to stop the round!");
                             res.json({
@@ -189,9 +205,53 @@ function getPlayerIfEnrolledInGame(players, uuid) {
 
 function getJudgeUuid(players){
     // Find the judge player and return the judge's public uuid.
-
-    // TODO: Still need to test this out to make sure it works (don't know if I need to use bool or string)
-    
-    let judgeUid = Object.keys(players).filter(player => players[player].judge === true).pop();
+    var judgeUid = Object.keys(players).filter(player => players[player].judge === true).pop();
     return players[judgeUid].uuid;
+}
+
+function assignNextJudge(allPlayers, gamecode){
+    // Get all players' private uids.
+    var playerKeys = Object.keys(allPlayers);
+
+    for (let i = 0; i < playerKeys.length; i++) {
+        const player = allPlayers[playerKeys[i]];
+        // Check if that player is the judge.
+        if (player.judge){
+            // If the player is a judge, toggle the judge value to false.
+            setJudgeField(gamecode, playerKeys[i], false);
+
+            // Check if we're in the last player.
+            if ((i+1) < playerKeys.length){
+                // If we're not the last player, toggle the next player's judge value to true.
+                setJudgeField(gamecode, playerKeys[i+1], true);
+            } else {
+                // Else go back and toggle the first player's judge value to true.
+                setJudgeField(gamecode, playerKeys[0], true);
+            }
+            break;
+        }
+    }
+}
+
+function incrementWinnerScore(gamecode, winnerUid){
+    firebase.database().ref(nodes.games).child(gamecode).child(nodes.players).child(winnerUid).child(nodes.score)
+        .transaction((score) => {
+            return score++;
+        });
+}
+
+function setJudgeField(gamecode, uid, isJudge){
+    firebase.database().ref(nodes.games).child(gamecode).child(nodes.players).child(uid).child(nodes.judge)
+        .set(isJudge)
+        .catch((error) => {
+            utils.logError(error, "Error: Failed to set judge field");
+        });
+}
+
+function resetGameWord(gamecode){
+    firebase.database().ref(nodes.games).child(gamecode).child(nodes.round).child(nodes.word)
+        .set("*")
+        .catch((error) => {
+            utils.logError(error, "Error: Failed to reset the word back to default");
+        });
 }

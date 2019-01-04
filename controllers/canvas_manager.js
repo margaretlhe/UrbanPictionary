@@ -1,7 +1,7 @@
 const utils = require('./utils');
 
-exports.setCanvasManager = function (socket) {
-    // let socket = utils.getSocketConnection(gamecode);
+exports.setCanvasManager = function (gamecode) {
+    let socket = utils.getSocketConnection(gamecode);
     socket.on('connection', function () {
         console.log("someone has connected!")
 

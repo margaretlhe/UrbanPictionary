@@ -23,7 +23,7 @@ let direction = true;
 socket.on('connect', function (socket) {
     console.log("drawer is connected");
 
-})
+});
 
 console.log(socket);
 console.log("timeout done")

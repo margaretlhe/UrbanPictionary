@@ -32,7 +32,8 @@ exports.nodes = { // TODO: This should be in one place where accessable by both 
     word: "word",
     uuid: "uuid",
     owner: "owner",
-    judge: "judge"
+    judge: "judge",
+    score: "score"
 };
 
 exports.maxPlayersPerGame = 5;
@@ -44,7 +45,7 @@ exports.Game = function(ownerUid, ownerObj, sfw){
     this.usedWordIds = [0],
     this.round = {
         started: false,
-        word: "_"
+        word: "*"
     }
 
     // Set variable parameters
