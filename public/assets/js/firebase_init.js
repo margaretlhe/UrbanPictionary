@@ -16,7 +16,8 @@ const nodes = { // TODO: This should be in one place where accessable by both cl
     sfw: "sfw",
     roundCount: "roundCount",
     started: "started",
-    uuid: "uuid"
+    uuid: "uuid",
+    word: "word"
 };
 
 const auth = {
