@@ -105,7 +105,7 @@ exports.play = function (req, res) {
                         if (isRoundJudge(allPlayers, reqObj.uuid)) {
                             res.render('game/judge');
                         } else {
-                            res.render('game/drawer');
+                            res.render('game/drawer');  
                         }
                     } else {
                         utils.renderError(res, "You are not enrolled in this game");
