@@ -26,12 +26,7 @@ function startGameCountdown(gamecode, judgeUuid){
         ()=>{
             // At the end of the timer, we want to enable the drawing canvas,
             // emit the word and start the round timer.
-
-            // TODO: Need toiate canvas manager HERE.
             canvasManager.setCanvasManager(gamecode);
-            //gameSocket.emit('drawing', function() {
-                //console.log('hello')
-            // })
            
             setGameWord(gamecode, "Some Funny Word!"); // TODO: Need to call function that gets word (maybe even before so we have the word ready to go on this step).
             gameSocket.emit(gameStartCountdownId, "GO!");
