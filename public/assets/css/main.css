@@ -289,6 +289,10 @@ button:focus {outline:0;}
 }
 
 /* Judge View */
+.canvasContainer {
+    width: 1400px;
+    margin: 0 auto;
+}
 .judgeViewCanvas {
     height: 380px;
     width: 675px;
