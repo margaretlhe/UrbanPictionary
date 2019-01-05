@@ -6,10 +6,7 @@ const nodes = Firebase.nodes;
 const gameStartCountdownId = "game-start-countdown";
 const roundCountdownId = "round-countdown";
 const gameTimerInSeconds = 10; // Timer used to countdown when the game begins.
-const roundTimerInSeconds = 30; // Timer used to countdown when the round is over.
- setTimeout(() => {
-    exports.startRound('-LVMV3h36OUlcs7Lx-P0','1703dff0-0fe8-11e9-8237-739a2b570d29')
-}, 2000); 
+const roundTimerInSeconds = 30; // Timer used to countdown when the round is over. 
 exports.startRound = function(gamecode, judgeUuid){
     activateTimer(gamecode);
     setJudgeReconnectSocket(gamecode);
