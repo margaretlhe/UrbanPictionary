@@ -12,7 +12,7 @@ exports.lobby_redirect = function(req, res){
         uid: req.body.uid,
     }
 
-    firebase.database().ref(nodes.games).child(reqObj.gamecode).child(reqObj.uid).child(node.uuid).once('value')
+    firebase.database().ref(nodes.games).child(reqObj.gamecode).child(nodes.players).child(reqObj.uid).child(nodes.uuid).once('value')
         .then((snap) => {
             if (snap.exists()){
                 res.json(utils.getLobbyRedirectObj(reqObj.gamecode, snap.val()));
@@ -150,7 +150,7 @@ exports.end_round = function(req, res){
                     gameRef.child(nodes.round).child(nodes.started)
                         .set(false)
                         .then(() => {
-                            // Incrememt winner score.
+                            // Increment winner score.
                             var winnerUid = getPlayerIfEnrolledInGame(allPlayers, reqObj.winnerUuid);
                             incrementWinnerScore(reqObj.gamecode, winnerUid);
 

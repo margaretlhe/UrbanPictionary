@@ -66,7 +66,7 @@ function setRoundManagerSockets(user){
         .on('value', (snap) => {
             if (!snap.val()){
                 // Send request to retrieve the proper redirect url for the client based on their private uid.
-                $.get(`/game/lobby-redirect/${gamecode}`, {
+                $.post(`/game/lobby-redirect/${gamecode}`, {
                     uid: user.uid
                 }).then((res)=>{
                     if (res.redirect){
@@ -83,12 +83,12 @@ function setRoundManagerSockets(user){
 
 function enableJudgeFunctionality(user){
     // TODO: Do something that triggers the judge the ability to select the winner.
-    //       Also need to ensure that we have the right judge
-    console.log("I'm the JUDGE");
 
     // TODO: Call 'selectWinner' from somewhere here.
     // TEMP FOR TESTING
-    // selectWinnner('75930530-0ffe-11e9-83df-65cf7b9ea265');
+    // setTimeout(()=>{
+    //     selectWinnner('75930530-0ffe-11e9-83df-65cf7b9ea265');
+    // }, 10000);
 }
 
 function selectWinnner(winnerUuid){
