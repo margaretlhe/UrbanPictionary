@@ -2,16 +2,20 @@
 
 <div class="container-fluid">
   <div>
-  <div id="roundInfo" class="d-flex flex-row justify-content-between">
-  {{> round-info }}
-</div>
-<div class="d-flex flex-row flex-wrap canvasContainer justify-content-around">
-  <canvas class="judgeViewCanvas" id="12345"></canvas>
-  <canvas class="judgeViewCanvas"></canvas>
-  <canvas class="judgeViewCanvas"></canvas>
-  <canvas class="judgeViewCanvas"></canvas>
-</div>
-</div>
+    <div class="d-flex align-items-center mx-auto" id="roundInfoContainer">
+    <div id="roundInfo" class="d-flex flex-row justify-content-between col-sm-8 mx-auto">
+      {{> round-info }}
+    </div>
+    </div>
+
+    <div class="d-flex flex-row flex-wrap canvasContainer justify-content-around">
+      <canvas class="judgeViewCanvas" id="12345"></canvas>
+      <canvas class="judgeViewCanvas"></canvas>
+      <canvas class="judgeViewCanvas"></canvas>
+    </div>
+
+  </div>
+  <div id="slideInWinner"><h1 id="winnerName"></h1></div>
 </div>
 {{> firebase-init }}
 {{> round-manager }}

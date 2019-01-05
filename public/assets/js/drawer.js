@@ -1,12 +1,7 @@
-// TODO: You can use socket and room here which is set from room_manager.js.
-// console.log(socket);
-// console.log(room);
-
-// TODO: This is where the socket listeners will go for a drawer.
-
 // TODO: Make sure that only the client with the matching private uid of the public uuid can draw.
 
 const canvas = document.getElementById('drawerCanvas');
+let colors = document.getElementsByClassName('color');
 const ctx = canvas.getContext('2d');
 const uuid = extractQueryParametersFromUrl().uuid;
 canvas.width = canvas.offsetWidth;
@@ -22,13 +17,22 @@ let direction = true;
 let current = {
     color: 'black'
 };
+// event listeners
+for (var i = 0; i < colors.length; i++) {
+    colors[i].addEventListener('click', onColorUpdate, false);
+};
+canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mousedown', throttle(mousemove, 10));
+canvas.addEventListener('mouseup', () => {
+    isDrawing = false;
+    getDataAndEmit();
+});
+canvas.addEventListener('mouseout', () => isDrawing = false);
 
 socket.on('connect', function (socket) {
     console.log('Im a connected drawer');
+    console.log(socket);
 });
-
-console.log(socket);
-console.log("timeout done")
 
 function draw(e) {
     if (!isDrawing) {
@@ -38,10 +42,11 @@ function draw(e) {
     ctx.moveTo(lastX, lastY);
     ctx.lineTo(e.offsetX, e.offsetY);
     ctx.lineWidth = 10;
+    ctx.strokeStyle = current.color;
     ctx.stroke();
     [lastX, lastY] = [e.offsetX, e.offsetY];
     getDataAndEmit();
-}
+};
 
 function getDataAndEmit() {
     let data = canvas.toDataURL();
@@ -49,30 +54,17 @@ function getDataAndEmit() {
         data: data,
         uuid: playerUuid
     };
-    socket.emit('drawing', dataObj)
+    socket.emit('drawing', dataObj);
 };
-
-for (var i = 0; i < colors.length; i++) {
-    colors[i].addEventListener('click', onColorUpdate, false);
-}
-canvas.addEventListener('mousemove', draw);
-canvas.addEventListener('mousedown', throttle(mousemove, 10));
-canvas.addEventListener('mouseup', () => {
-    isDrawing = false;
-    getDataAndEmit();
-});
-canvas.addEventListener('mouseout', () => isDrawing = false);
-
-
+// Event callbacks
 function onColorUpdate(e) {
     current.color = e.target.className.split(' ')[1];
-}
+};
 
 function mousemove(e) {
     isDrawing = true;
     [lastX, lastY] = [e.offsetX, e.offsetY];
-    getDataAndEmit();
-}
+};
 
 // limit the number of events per second
 function throttle(callback, delay) {
@@ -83,6 +75,6 @@ function throttle(callback, delay) {
         if ((time - previousCall) >= delay) {
             previousCall = time;
             callback.apply(null, arguments);
-        }
+        };
     };
-}
+};

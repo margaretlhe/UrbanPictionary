@@ -4,7 +4,7 @@ exports.setCanvasManager = function (gamecode) {
     let socket = utils.getSocketConnection(gamecode);
 
     socket.on('connection', function (socket) {
-        console.log("someone has connected!")
+        console.log("someone has connected!");  
 
         socket.on('drawing', function (dataObj) {
             console.log('drawing event triggered');
@@ -20,5 +20,5 @@ exports.setCanvasManager = function (gamecode) {
     
     function updateJudgeCanvas(dataObj){
         socket.emit('drawingToJudge', dataObj);
-    }
+    };
 };
