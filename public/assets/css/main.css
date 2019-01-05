@@ -1,8 +1,12 @@
 body {
     background-color: #89CEE9;
     font-family: 'Amatic SC', cursive;
+    box-sizing: border-box
 }
-button:focus {outline:0;}
+
+button:focus {
+    outline: 0;
+}
 
 .titleContainer {
     width: 100%;
@@ -112,9 +116,11 @@ button:focus {outline:0;}
     height: 200px;
 
 }
+
 .buttonWrapper {
     margin-top: 100px;
 }
+
 .mode {
     color: #000000;
     font-size: 120px;
@@ -197,6 +203,7 @@ button:focus {outline:0;}
     font-size: 30px;
     margin-top: 75px;
 }
+
 #createBtn {
     background-color: #1FE96E;
     border-radius: 10px;
@@ -246,19 +253,21 @@ button:focus {outline:0;}
 /* Drawer View */
 #drawerCanvas {
     position: absolute;
-    top: 100px;
+    top: 165px;
     bottom: 0;
     left: 0;
     right: 0;
     height: 660px;
-    width: 1175px;
+    width: 1176px;
     background-color: #ffffff;
     margin: auto;
+    border: 3px solid black;
+    border-radius: 30px;
+    box-shadow: rgba(0, 0, 0, .3) 5px 5px;
 }
 
 .colors {
     position: relative;
-    top: 15px;
     margin: 0 auto;
 }
 
@@ -289,10 +298,52 @@ button:focus {outline:0;}
 }
 
 /* Judge View */
+#roundInfo {
+    margin: 0 auto;
+}
+
+#roundInfoContainer{
+    background-color:#D3D3D3;
+    height: 85px;
+    width: 1500px;
+    margin-bottom: 20px;
+    border: 3px solid black;
+    border-radius: 20px;
+}
+.canvasContainer {
+    width: 1400px;
+    margin: 0 auto;
+}
+
 .judgeViewCanvas {
-    height: 380px;
-    width: 675px;
+    height: 330px;
+    width: 588px;
     background-color: #ffffff;
-    margin: 10px;
-    margin-top: 0;
+    margin: 10px 20px 10px 10px;
+    
+    border: 3px solid black;
+    border-radius: 15px;
+    box-shadow: rgba(0, 0, 0, .3) 5px 5px;
+}
+
+.judgeState:hover {
+    border: 3px solid orange;
+}
+
+.winner {
+    border: 3px solid green;
+}
+
+.losers {
+    border: 3px solid red;
+}
+#slideInWinner {
+    position: absolute;
+    width: 300px;
+    height: 150px;
+    border: 3px 3px solid black;
+    background-color: #000000;
+    top: 500px;
+    right: -300px;
+    
 }
