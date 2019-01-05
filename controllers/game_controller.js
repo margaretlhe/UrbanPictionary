@@ -236,7 +236,7 @@ function assignNextJudge(allPlayers, gamecode){
 function incrementWinnerScore(gamecode, winnerUid){
     firebase.database().ref(nodes.games).child(gamecode).child(nodes.players).child(winnerUid).child(nodes.score)
         .transaction((score) => {
-            return score++;
+            return score+1;
         });
 }
 
