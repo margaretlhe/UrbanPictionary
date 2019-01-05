@@ -26,7 +26,10 @@ $(document).ready(function() {
             }
 
             //push message into firebase database
-            firebase.database().ref(nodes.games).child(gamecode).child(nodes.messages).push(messageInfo); 
+            firebase.database().ref(nodes.games).child(gamecode).child(nodes.messages).push(messageInfo)
+                .catch((error) => {
+                    logError(error, "Error: Failed to send message to Firebase");
+                }); 
 
             // clear text box display afterward
             $("#entered-text").val('');
@@ -78,6 +81,5 @@ $(document).ready(function() {
 
         document.getElementById("textBoxID").appendChild(iDiv);
     } // end display Message function
-
 });
 
