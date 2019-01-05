@@ -30,7 +30,6 @@ canvas.addEventListener('mouseup', () => {
 canvas.addEventListener('mouseout', () => isDrawing = false);
 
 socket.on('connect', function (socket) {
-    console.log('Im a connected drawer');
     console.log(socket);
 });
 
