@@ -127,6 +127,10 @@ function setJudgeReconnectSocket(gamecode){
 
 // temperoray words for the demo
 function getNewWord() {
+    if(wordIndex === (wordLibrary.length-1)) {
+        wordIndex = 0;
+    } else {
     wordIndex++;
+    }
     return wordLibrary[wordIndex];
 }
